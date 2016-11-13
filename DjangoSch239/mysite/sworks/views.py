@@ -7,7 +7,6 @@ from django.shortcuts import render, get_object_or_404, render_to_response
 
 # -*- coding: utf-8 -*-
 from django.template import RequestContext
-from samba.dcerpc.security import standard_mapping
 
 from .models import Student, Task, Attempt
 from django.template import loader
