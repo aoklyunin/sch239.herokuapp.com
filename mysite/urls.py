@@ -4,7 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 import sworks.views
-import settings
+#import settings
 # Examples:
 # url(r'^$', 'gettingstarted.views.home', name='home'),
 # url(r'^blog/', include('blog.urls')),
