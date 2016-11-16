@@ -31,10 +31,6 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = (
-<<<<<<< HEAD
-    
-=======
->>>>>>> 043b375198f084f8af1ed02d5a3b047668897d6d
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,11 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sworks',
-<<<<<<< HEAD
-    'bootstrap3',
-=======
     'bootstrap3'
->>>>>>> 043b375198f084f8af1ed02d5a3b047668897d6d
 )
 
 MIDDLEWARE_CLASSES = (
