@@ -127,7 +127,7 @@ ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
+STATICFILES_DIR = (
     os.path.join(BASE_DIR, '../myapp/static')
 
 # Extra places for collectstatic to find static files.
