@@ -127,13 +127,7 @@ ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIR = (
-    os.path.join(BASE_DIR, '../myapp/static')
-
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'static'),
-)
+STATICFILES_DIR = (os.path.join(BASE_DIR, '../myapp/static'))
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
