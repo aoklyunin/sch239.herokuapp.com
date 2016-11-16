@@ -4,6 +4,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 import sworks.views
+from django.conf import settings
+
 #import settings
 # Examples:
 # url(r'^$', 'gettingstarted.views.home', name='home'),
@@ -15,9 +17,8 @@ urlpatterns = [
     url(r'^addAttempt$', sworks.views.addAttempt, name='addAttempt'),
     url(r'^attemptList', sworks.views.attemptList, name='attemptList'),
     url(r'^', sworks.views.index, name='index'),
-  #  url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-  #      'document_root': settings.STATIC_ROOT,
-  #  }
- #)
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.STATIC_ROOT,
+    })
     
 ]
