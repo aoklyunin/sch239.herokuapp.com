@@ -15,5 +15,9 @@ urlpatterns = [
     url(r'^addAttempt$', sworks.views.addAttempt, name='addAttempt'),
     url(r'^attemptList', sworks.views.attemptList, name='attemptList'),
     url(r'^', sworks.views.index, name='index'),
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.STATIC_ROOT,
+    }
+ )
     
 ]
