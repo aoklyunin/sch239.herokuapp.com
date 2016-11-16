@@ -127,7 +127,14 @@ ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIR = (os.path.join(BASE_DIR, '../myapp/static'))
+ADMIN_MEDIA_PREFIX = '/static/admin/'
+
+STATICFILES_DIRS = (
+    # I have the static folder inside my app and not inside the project
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+
+
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
