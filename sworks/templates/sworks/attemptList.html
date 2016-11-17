@@ -11,6 +11,7 @@
 <table class="table">
     <tr>
         <th>Фамилия Имся</th>
+        <th>Задание</th>
         <th>Ссылка</th>
         <th>Комментарий</th>
         <th>Проверить</th>
@@ -20,6 +21,10 @@
         <tr>
             <td>
                 {{ attempt.student.name }}
+            </td>
+            <td>
+                {{ attempt.task.task_name }} <br>
+                {{ attempt.task.pub_date }}
             </td>
             <td>
                 <a href={{ attempt.link }}  rel="external">Попытка</a>
