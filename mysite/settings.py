@@ -140,3 +140,7 @@ STATICFILES_DIRS = (
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(default='postgres://dhcxkmpzbifqeo:SQAaiBoCsUfxFYUvc9OoXmKN-J@ec2-54-217-214-53.eu-west-1.compute.amazonaws.com:5432/diqbf71cvhca5')
+
+
