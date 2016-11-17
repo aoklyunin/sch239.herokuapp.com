@@ -5,6 +5,7 @@ admin.autodiscover()
 
 import sworks.views
 from django.conf import settings
+import django.views.static
 
 #import settings
 # Examples:
@@ -17,6 +18,4 @@ urlpatterns = [
     url(r'^addAttempt$', sworks.views.addAttempt, name='addAttempt'),
     url(r'^attemptList', sworks.views.attemptList, name='attemptList'),
     url(r'^', sworks.views.index, name='index'),
-   
-    
 ]
