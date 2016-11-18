@@ -41,6 +41,14 @@ INSTALLED_APPS = (
     'bootstrap3'
 )
 
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

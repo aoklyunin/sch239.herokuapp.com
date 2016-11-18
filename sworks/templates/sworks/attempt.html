@@ -16,6 +16,7 @@
 
 
 </head>
+
 {# Load the tag library #}
 {% load bootstrap3 %}
 
@@ -27,6 +28,7 @@
 {% bootstrap_messages %}
 
 <H1 align="center">Добавить попытку</H1>
+
 <form method="post" action="addAttempt" class="attempt_form">
 
     {% csrf_token %}.
@@ -48,5 +50,3 @@
     </div>
 
 </form>
-
-

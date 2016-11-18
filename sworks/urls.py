@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^$', views.attempt, name='index'),
     url(r'^attemptList$', views.attemptList, name='attemotList'),
     url(r'^/remove/(?P<attemptId>[0-9]+)$', views.removeAttempt, name='remove')
+
 ]

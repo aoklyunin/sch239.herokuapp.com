@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
-
-import datetime
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, render_to_response
-
-# -*- coding: utf-8 -*-
-from django.template import RequestContext
-
 from .models import Student, Task, Attempt
-from django.template import loader
+import datetime
+from django.contrib import auth
+from django.http import HttpResponse
+from django.contrib import messages
+from django.shortcuts import render, render_to_response
+from django.http import HttpResponseRedirect
+from django.contrib.auth import logout
 from django import forms
 
 
@@ -23,6 +20,29 @@ class NameForm(forms.Form):
                            widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': 'Ссылка'}), label="")
 
 
+class LoginForm(forms.Form):
+    username = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'Логин'}),
+                               label="")
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Логин'}), label="")
+
+    widgets = {
+        'password': forms.PasswordInput(),
+    }
+
+def register(request):
+    student_list = Student.objects.order_by('name')
+    task_list = Task.objects.order_by('-pub_date')
+    template = 'sworks/register.html'
+    context = {
+    #    "form": RegisterForm()
+    }
+    return render(request, template, context)
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect("/")
+
+
 def attempt(request):
     student_list = Student.objects.order_by('name')
     task_list = Task.objects.order_by('-pub_date')
@@ -34,10 +54,26 @@ def attempt(request):
     }
     return render(request, template, context)
 
-
 def index(request):
+    if request.method == "POST":
+        if ("username" in request.POST) and ("password" in request.POST):
+            username = request.POST['username']
+            password = request.POST['password']
+            user = auth.authenticate(username=username, password=password)
+            mutable = request.POST._mutable
+            request.POST._mutable = True
+            if user is not None and user.is_active:
+                # Правильный пароль и пользователь "активен"
+                auth.login(request, user)
+                messages.success(request, "успешный вход")
+            else:
+                messages.error(request, "пара логин-пароль не найдена")
     template = 'sworks/index.html'
-    return render(request, template)
+    context = {
+        "user": request.user,
+        "form": LoginForm(),
+    }
+    return render(request, template, context)
 
 
 def addAttempt(request):
