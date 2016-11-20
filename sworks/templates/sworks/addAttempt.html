@@ -1,0 +1,40 @@
+{% extends "sworks/base.html" %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block title %}Добавить попытку{% endblock %}
+
+{% block style_block %}
+    .attempt_form {
+    width: 500px;
+    margin: 0 auto;
+    }
+{% endblock %}
+
+{% block sub_content %}
+
+    <form action="." method="post" class="attempt_form">
+        {% csrf_token %}
+        {% bootstrap_field form.task %}
+        {% bootstrap_field form.link %}
+        {% bootstrap_field form.comment %}
+        <div align="center">
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">
+                    {% bootstrap_icon "star" %} Добавить
+                </button>
+                <button type="reset" class="btn">
+                    Отмена
+                </button>
+            {% endbuttons %}
+        </div>
+
+    </form>
+
+{% endblock %}

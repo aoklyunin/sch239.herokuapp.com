@@ -1,22 +1,4 @@
-<head>
-    <title>
-        Добавить попытку
-    </title>
-    <style>
-        .student-field {
-            margin: 0 auto;
-        }
-
-        .attempt_form {
-
-            width: 500px;
-            margin: 0 auto;
-        }
-    </style>
-
-
-</head>
-
+{% extends "sworks/base.html" %}
 {# Load the tag library #}
 {% load bootstrap3 %}
 
@@ -26,27 +8,22 @@
 
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
+{% block title %}Регистрация{% endblock %}
 
-<H1 align="center">Добавить попытку</H1>
+{% block content %}
+    {% if user.is_authenticated == False %}
+        <br><br>
+        <H1> Этот раздел Вам недоступен, необходимо войти</H1>
+        <br><br>
+    {% else %}
+    {% endif %}
+{% endblock %}
 
-<form method="post" action="addAttempt" class="attempt_form">
-
-    {% csrf_token %}.
-    <div class="student-field">
-        {% bootstrap_field form.student %}
-    </div>
-    {% bootstrap_field form.task %}
-    {% bootstrap_field form.link %}
-    {% bootstrap_field form.comment %}
-    <div align="center">
-        {% buttons %}
-            <button type="submit" class="btn btn-primary">
-                {% bootstrap_icon "star" %} Добавить
-            </button>
-            <button type="reset" class="btn">
-                Отмена
-            </button>
-        {% endbuttons %}
-    </div>
-
-</form>
+{% block sub_content %}
+    {% if user.is_authenticated == False %}
+    {% else %}
+        {% for comment in attempt.comment %}
+            {{ comment }}<br>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

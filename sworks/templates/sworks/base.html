@@ -3,18 +3,9 @@
     {% block title %}My amazing site{% endblock %}
 </title>
     <style>
-        .student-field {
-            margin: 0 auto;
-        }
+        {% block style_block %}
 
-        .email_field {
-            width: 300px
-        }
-
-        .register_form {
-            width: 500px;
-            margin: 0 auto;
-        }
+        {%  endblock %}
     </style>
 
 
@@ -61,7 +52,7 @@
                 </form>
             {% else %}
 
-                <form class="navbar-form navbar-right" role="form" action="logout/" method="post">
+                <form class="navbar-form navbar-right" role="form" action="../../../logout/" method="post">
 
                     {% csrf_token %}
                     <button type="submit" class="btn btn-success">Выход</button>

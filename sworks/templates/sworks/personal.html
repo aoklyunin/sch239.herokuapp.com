@@ -1,0 +1,51 @@
+{% extends "sworks/base.html" %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated == False %}
+        <br><br>
+        <H1> Этот раздел Вам недоступен, необходимо войти</H1>
+        <br><br>
+    {% else %}
+        <br><br>
+        <p><a class="btn btn-primary btn-lg" role="button" href="..\addAttempt\">Добавить попытку »</a></p>
+    {% endif %}
+{% endblock %}
+
+{% block sub_content %}
+
+    {% if user.is_authenticated == False %}
+    {% else %}
+        <br><br>
+        <table class="table">
+            {% for attempt in attempt_list %}
+                <tr>
+                    <td>
+                        {{ attempt.task.task_name }}
+                    </td>
+                    <td>
+                        {{ attempt.comment.first }}
+                    </td>
+                    <td>
+                        <a href={{ attempt.link }}  rel="external">Ссылка на попытку</a>
+                        <script type="text/javascript">
+                            $('a[rel=external]').attr('target', '_blank');
+                        </script>
+                    </td>
+                    <td>
+                         <a href="../../attempt/{{ attempt.id }}/" class="btn btn-primary" rel="button">Обсуждение</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

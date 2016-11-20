@@ -1,45 +1,17 @@
 # -*- coding: utf-8 -*-
-from bson import is_valid
-
-from django.contrib.auth.models import User
-from .models import Student, Task, Attempt
+from .models import Student, Task, Attempt, AttemptComment
 import datetime
 from django.contrib import auth
 from django.http import HttpResponse
 from django.contrib import messages
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import logout
 from django import forms
-
-from django.http import Http404, HttpResponseForbidden
 from django.contrib.auth.models import User
-from django import forms
-from django.contrib.auth import (
-    authenticate, get_user_model, password_validation,
-)
-from django.contrib.auth.hashers import (
-    UNUSABLE_PASSWORD_PREFIX, identify_hasher,
-)
-from django.contrib.auth.models import User
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMultiAlternatives
-from django.forms.utils import flatatt
-from django.template import loader
-from django.utils.encoding import force_bytes
-from django.utils.html import format_html, format_html_join
-from django.utils.http import urlsafe_base64_encode
-from django.utils.safestring import mark_safe
-from django.utils.text import capfirst
-from django.utils.translation import ugettext, ugettext_lazy as _
-import unicodedata
-
-from django.contrib.auth.forms import UserCreationForm
 
 
-class NameForm(forms.Form):
-    student = forms.ModelChoiceField(queryset=Student.objects.all(), empty_label="Выберите ученика", label="")
+class AddAttemptForm(forms.Form):
     task = forms.ModelChoiceField(queryset=Task.objects.all(), empty_label="Выберите задание", label="")
     comment = forms.CharField(max_length=2000,
                               widget=forms.Textarea(attrs={'rows': 4, 'cols': 40, 'placeholder': 'Комментарий'}),
@@ -63,8 +35,9 @@ class RegisterForm(forms.Form):
                                label="Логин")
     password = forms.CharField(widget=forms.PasswordInput(attrs={'rows': 1, 'cols': 20, 'placeholder': 'qwerty123'}),
                                label="Пароль")
-    rep_password = forms.CharField(widget=forms.PasswordInput(attrs={'rows': 1, 'cols': 20, 'placeholder': 'qwerty123'}),
-                                   label="Повторите пароль")
+    rep_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'rows': 1, 'cols': 20, 'placeholder': 'qwerty123'}),
+        label="Повторите пароль")
     schooler_class = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': '10-3'}),
                                      label="Класс")
     schooler_group = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': '1'}),
@@ -83,7 +56,7 @@ def register(request):
         if form.is_valid():
             if form.cleaned_data["password"] != form.cleaned_data["rep_password"]:
                 messages.error(request, "пароли не совпадают")
-                data = {'username':form.cleaned_data["username"],
+                data = {'username': form.cleaned_data["username"],
                         'schooler_class': form.cleaned_data["schooler_class"],
                         'schooler_group': form.cleaned_data["schooler_group"],
                         'mail': form.cleaned_data["mail"],
@@ -91,8 +64,8 @@ def register(request):
                         'second_name': form.cleaned_data["second_name"],
                         }
                 return render(request, "sworks/register.html", {
-                        'form': RegisterForm(initial=data),
-                        'ins_form': LoginForm()
+                    'form': RegisterForm(initial=data),
+                    'ins_form': LoginForm()
                 })
             else:
                 musername = form.cleaned_data["username"]
@@ -102,30 +75,30 @@ def register(request):
                 name = form.cleaned_data["name"]
                 second_name = form.cleaned_data["second_name"]
                 mpassword = form.cleaned_data["password"]
-                #try:
-                user = User.objects.create_user(username=musername,
-                                                email=mmail,
-                                                password=mpassword)
-                if user:
-                    user.first_name = name
-                    user.last_name = second_name
-                    user.save()
-                    s = Student.objects.create(user = user,st_klass=schooler_class,st_group=schooler_group)
-                    s.save()
+                try:
+                    user = User.objects.create_user(username=musername,
+                                                    email=mmail,
+                                                    password=mpassword)
+                    if user:
+                        user.first_name = name
+                        user.last_name = second_name
+                        user.save()
+                        s = Student.objects.create(user=user, st_klass=schooler_class, st_group=schooler_group)
+                        s.save()
                     return HttpResponseRedirect("/")
-            #except:
-            #        messages.error(request, "не получилось создать пользователя")
-            #        data = {'username': form.cleaned_data["username"],
-            #                'schooler_class': form.cleaned_data["schooler_class"],
-            #                'schooler_group': form.cleaned_data["schooler_group"],
-            #                'mail': form.cleaned_data["mail"],
-            #                'name': form.cleaned_data["name"],
-            #                'second_name': form.cleaned_data["second_name"],
-            #                }
-            #        return render(request, "sworks/register.html", {
-            #            'form': RegisterForm(initial=data),
-            #            'ins_form': LoginForm()
-            #        })
+                except:
+                    messages.error(request, "не получилось создать пользователя")
+                    data = {'username': form.cleaned_data["username"],
+                            'schooler_class': form.cleaned_data["schooler_class"],
+                            'schooler_group': form.cleaned_data["schooler_group"],
+                            'mail': form.cleaned_data["mail"],
+                            'name': form.cleaned_data["name"],
+                            'second_name': form.cleaned_data["second_name"],
+                            }
+                    return render(request, "sworks/register.html", {
+                        'form': RegisterForm(initial=data),
+                        'ins_form': LoginForm()
+                    })
         else:
             return HttpResponseRedirect("/register/")
     else:
@@ -135,21 +108,19 @@ def register(request):
         })
 
 
+def personal(request):
+    student = Student.objects.get(user=request.user)
+    at_list = Attempt.objects.filter(student=student)
+    return render(request, "sworks/personal.html", {
+        'login_form': LoginForm(),
+        'attempt_list': at_list,
+
+    })
+
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect("/")
-
-
-def attempt(request):
-    student_list = Student.objects.order_by('name')
-    task_list = Task.objects.order_by('-pub_date')
-    template = 'sworks/attempt.html'
-    context = {
-        'student_list': student_list,
-        'task_list': task_list,
-        "form": NameForm()
-    }
-    return render(request, template, context)
 
 
 def index(request):
@@ -173,25 +144,37 @@ def index(request):
     return render(request, template, context)
 
 
+def attempt(request, attempt_id):
+    return render(request, "sworks/attempt.html", {
+        "attempt": Attempt.objects.get(pk=attempt_id),
+        "login_form": LoginForm(),
+        "user": request.user,
+    })
+
+
 def addAttempt(request):
-    form = NameForm(request.POST)
-    if request.method == "POST" and form.is_valid():
-        student = form.cleaned_data['student']
-        task = form.cleaned_data['task']
-        comment = form.cleaned_data['comment']
-        link = form.cleaned_data['link']
-        date = datetime.datetime.now().date()
-        at = Attempt(student=student, task=task, comment=comment, add_date=date, link=link, checked=False)
-        at.save()
-        return succesAddTemplate(request)
-    else:
-        student_list = Student.objects.order_by('name')
-        task_list = Task.objects.order_by('-pub_date')
-        return render_to_response("sworks/attempt.html", {
-            'student_list': student_list,
-            'task_list': task_list,
-            'form': form,
-        })
+    if request.method == "POST":
+        form = AddAttemptForm(request.POST)
+        if form.is_valid():
+            task = form.cleaned_data['task']
+            comment = form.cleaned_data['comment']
+            link = form.cleaned_data['link']
+            date = datetime.datetime.now().date()
+            student = Student.objects.get(user=request.user)
+            comment_object = AttemptComment.objects.create(isReaded=False, text=comment, author=student)
+            comment_object.save()
+            at = Attempt(student=student, task=task, add_date=date, link=link, checked=False)
+            at.save()
+            at.comment.add(comment_object)
+            return HttpResponseRedirect('../../personal/')
+
+    task_list = Task.objects.order_by('-pub_date')
+    return render(request, "sworks/addAttempt.html", {
+        "task_list": task_list,
+        "login_form": LoginForm(),
+        "form": AddAttemptForm(),
+        "user": request.user,
+    })
 
 
 def errorAddingTemolate(request):
@@ -205,10 +188,6 @@ def detail(request, task_id):
 def results(request, task_id):
     response = "You're looking at the results of question %s."
     return HttpResponse(response % task_id)
-
-
-def succesAddTemplate(request):
-    return HttpResponseRedirect('/')
 
 
 def attemptList(request):

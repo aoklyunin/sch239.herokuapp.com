@@ -14,10 +14,11 @@ import django.views.static
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^attempt', include('sworks.urls')),
-    url(r'^addAttempt$', sworks.views.addAttempt, name='addAttempt'),
-    url(r'^attemptList', sworks.views.attemptList, name='attemptList'),
+    url(r'^addAttempt/$', sworks.views.addAttempt, name='addAttempt'),
+    url(r'^attemptList/$', sworks.views.attemptList, name='attemptList'),
     url(r'^logout/$', sworks.views.logout_view),
     url(r'^register/$', sworks.views.register),
+    url(r'^attempt/(?P<attempt_id>[0-9]+)/$', sworks.views.attempt),
+    url(r'^personal/$', sworks.views.personal),
     url(r'^', sworks.views.index, name='index'),
 ]
