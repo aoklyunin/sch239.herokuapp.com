@@ -17,7 +17,21 @@
     }
 {% endblock %}
 
+{% block content %}
+    {% if user.is_authenticated == False %}
+        <br><br>
+        <H1> Этот раздел Вам недоступен, необходимо войти</H1>
+        <br><br>
+    {% else %}
+        <br><br>
+        <a href="../../personal/" class="btn btn-primary btn-lg" rel="button"> << Личный кабинет</a>
+    {% endif %}
+{% endblock %}
+
 {% block sub_content %}
+    {% if user.is_authenticated == False %}
+    {% else %}
+
 
     <form action="." method="post" class="attempt_form">
         {% csrf_token %}
@@ -36,5 +50,6 @@
         </div>
 
     </form>
+    {% endif %}
 
 {% endblock %}

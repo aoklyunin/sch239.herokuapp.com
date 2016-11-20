@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^register/$', sworks.views.register),
     url(r'^attempt/(?P<attempt_id>[0-9]+)/$', sworks.views.attempt),
     url(r'^personal/$', sworks.views.personal),
+    url(r'^addTask/$', sworks.views.addTask),
     url(r'^', sworks.views.index, name='index'),
 ]

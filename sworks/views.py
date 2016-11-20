@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from pygments.lexer import words
+
 from .models import Student, Task, Attempt, AttemptComment
 import datetime
 from django.contrib import auth
@@ -18,6 +20,33 @@ class AddAttemptForm(forms.Form):
                               label="")
     link = forms.CharField(max_length=200,
                            widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': 'Ссылка'}), label="")
+
+
+class AttemptForm(forms.Form):
+    text = forms.CharField(max_length=200,
+                           widget=forms.Textarea(attrs={'rows': 4, 'cols': 40, 'placeholder': 'Ссылка'}), label="")
+
+
+class AddTaskForm(forms.Form):
+    task_name = forms.CharField(max_length=200,
+                                widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': 'название задания'}), label="Название задания ")
+    task_type = forms.CharField(max_length=200,
+                                widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Классное/ДЗ")
+    work_type = forms.CharField(max_length=200,
+                                widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Тип работы")
+    pub_date = forms.CharField(max_length=200,
+                               widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Дата опубликовая")
+    est1 = forms.CharField(max_length=200,
+                           widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Оценка 1")
+    est2 = forms.CharField(max_length=200,
+                           widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Оценка 2")
+    est3 = forms.CharField(max_length=200,
+                           widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Оценка 3")
+    est4 = forms.CharField(max_length=200,
+                           widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Оценка 4")
+    est5 = forms.CharField(max_length=200,
+                           widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Оценка 5")
+
 
 
 class LoginForm(forms.Form):
@@ -87,7 +116,7 @@ def register(request):
                         s.save()
                     return HttpResponseRedirect("/")
                 except:
-                    messages.error(request, "не получилось создать пользователя")
+                    messages.error(request, "Такой пользователь уже есть")
                     data = {'username': form.cleaned_data["username"],
                             'schooler_class': form.cleaned_data["schooler_class"],
                             'schooler_group': form.cleaned_data["schooler_group"],
@@ -145,8 +174,56 @@ def index(request):
 
 
 def attempt(request, attempt_id):
+    at = Attempt.objects.get(id=attempt_id)
+    if request.method == "POST":
+        form = AttemptForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            student = Student.objects.get(user=request.user)
+            comment_object = AttemptComment.objects.create(isReaded=False, text=text, author=student)
+            comment_object.save()
+            at.comment.add(comment_object)
+    form = AttemptForm()
     return render(request, "sworks/attempt.html", {
-        "attempt": Attempt.objects.get(pk=attempt_id),
+        "attempt": at,
+        "text_form": form,
+        "login_form": LoginForm(),
+        "user": request.user,
+    })
+
+
+def addTask(request):
+    if request.method == "POST":
+        form = AddTaskForm(request.POST)
+        if form.is_valid():
+            task_name = form.cleaned_data['task_name']
+            task_type = form.cleaned_data['task_type']
+            work_type = form.cleaned_data['work_type']
+            pub_date = form.cleaned_data['pub_date']
+            est1 = form.cleaned_data['est1']
+            est2 = form.cleaned_data['est2']
+            est3 = form.cleaned_data['est3']
+            est4 = form.cleaned_data['est4']
+            est5 = form.cleaned_data['est5']
+            t = Task.objects.create(task_name = task_name, task_type =task_type,
+                                    work_type=work_type,pub_date=pub_date,
+                                    est1= est1, est2=est2,est3=est3,
+                                    est4=est4,est5=est5)
+            t.save()
+    data = {
+        'task_name':'',
+        'task_type':0,
+        'work_type':0,
+        'pub_date':datetime.date.today(),
+        'est1':'0,1,2',
+        'est2':'3,4,5',
+        'est3':'6,7,8',
+        'est4':'10,9',
+        'est5':'11'
+    }
+
+    return render(request, "sworks/addTask.html", {
+        "task_form": AddTaskForm(initial=data),
         "login_form": LoginForm(),
         "user": request.user,
     })

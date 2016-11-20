@@ -43,6 +43,7 @@ class AttemptComment(models.Model):
     text = models.CharField(max_length=2000)
     author = models.ForeignKey(Student)
     datetime = models.DateTimeField(default=datetime.datetime.now())
+
     def __str__(self):
         return self.text
 
@@ -57,6 +58,7 @@ class Attempt(models.Model):
     checked = models.BooleanField()
     link = models.CharField(max_length=200)
     comment = models.ManyToManyField(AttemptComment)
+    isAccepted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.student.__unicode__()+ '(' + str(self.add_date) + ')'
