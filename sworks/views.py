@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from bson import is_valid
+
+from django.contrib.auth.models import User
 from .models import Student, Task, Attempt
 import datetime
 from django.contrib import auth
@@ -8,6 +11,31 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponseRedirect
 from django.contrib.auth import logout
 from django import forms
+
+from django.http import Http404, HttpResponseForbidden
+from django.contrib.auth.models import User
+from django import forms
+from django.contrib.auth import (
+    authenticate, get_user_model, password_validation,
+)
+from django.contrib.auth.hashers import (
+    UNUSABLE_PASSWORD_PREFIX, identify_hasher,
+)
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMultiAlternatives
+from django.forms.utils import flatatt
+from django.template import loader
+from django.utils.encoding import force_bytes
+from django.utils.html import format_html, format_html_join
+from django.utils.http import urlsafe_base64_encode
+from django.utils.safestring import mark_safe
+from django.utils.text import capfirst
+from django.utils.translation import ugettext, ugettext_lazy as _
+import unicodedata
+
+from django.contrib.auth.forms import UserCreationForm
 
 
 class NameForm(forms.Form):
@@ -29,14 +57,55 @@ class LoginForm(forms.Form):
         'password': forms.PasswordInput(),
     }
 
+
+class RegisterForm(forms.Form):
+    username = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'mylogin'}),
+                               label="Логин")
+    password = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'qwerty123'}),
+                               label="Пароль")
+    rep_password = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'qwerty123'}),
+                                   label="Повторите пароль")
+    schooler_class = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': '10-3'}),
+                                     label="Класс")
+    schooler_group = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': '1'}),
+                                     label="номер группы")
+    mail = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'example@gmail.com'}),
+                           label="Адрес электронной почты")
+    name = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'Иван'}), label="Имя")
+    second_name = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'Иванов'}),
+                                  label="Фамилия")
+
+
 def register(request):
-    student_list = Student.objects.order_by('name')
-    task_list = Task.objects.order_by('-pub_date')
-    template = 'sworks/register.html'
-    context = {
-    #    "form": RegisterForm()
-    }
-    return render(request, template, context)
+    if request.method == 'POST':
+        print "request.POST %s" % request.POST
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data["password"] != form.cleaned_data["rep_password"]:
+                try:
+                    new_user = form.save()
+                except:
+                    print "was exception"
+                messages.error(request, "пароли не совпадают")
+                data = {'username':form.cleaned_data["username"],
+                        'schooler_class': form.cleaned_data["schooler_class"],
+                        'schooler_group': form.cleaned_data["schooler_group"],
+                        'mail': form.cleaned_data["mail"],
+                        'name': form.cleaned_data["name"],
+                        'second_name': form.cleaned_data["second_name"],
+                        }
+                return render(request, "sworks/register.html", {
+                        'form': RegisterForm(initial=data)
+                    })
+            else:
+                return HttpResponseRedirect("/")
+        else:
+            return HttpResponseRedirect("/register/")
+    else:
+        return render(request, "sworks/register.html", {
+            'form': RegisterForm()
+        })
+
 
 def logout_view(request):
     logout(request)
@@ -54,13 +123,13 @@ def attempt(request):
     }
     return render(request, template, context)
 
+
 def index(request):
     if request.method == "POST":
         if ("username" in request.POST) and ("password" in request.POST):
             username = request.POST['username']
             password = request.POST['password']
             user = auth.authenticate(username=username, password=password)
-            mutable = request.POST._mutable
             request.POST._mutable = True
             if user is not None and user.is_active:
                 # Правильный пароль и пользователь "активен"

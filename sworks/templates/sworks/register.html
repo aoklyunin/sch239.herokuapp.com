@@ -1,4 +1,4 @@
-
+{% extends "sworks/base.html" %}
 {# Load the tag library #}
 {% load bootstrap3 %}
 
@@ -8,10 +8,33 @@
 
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
+{% block title %}Регистрация{% endblock %}
 
-    <form action="" method="post">
-      {% csrf_token %}
-      <!-- as_p для того, чтобы каждый элемент формы был с новой строки -->
-      {{ form.as_p }}
-      <button type="submit">Зарегистрироваться</button>
-    </form>
+{% block content %}
+    <form method="post" action="." class="register_form">
+            {% csrf_token %}
+            <br><br>
+
+            {% bootstrap_field form.username %}
+            {% bootstrap_field form.password %}
+            {% bootstrap_field form.rep_password %}
+
+            {% bootstrap_field form.mail %}
+            {% bootstrap_field form.name %}
+            {% bootstrap_field form.second_name %}
+            {% bootstrap_field form.schooler_class %}
+            {% bootstrap_field form.schooler_group %}
+
+
+            <div align="center">
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        Добавить
+                    </button>
+                    <button type="reset" class="btn">
+                        Отмена
+                    </button>
+                {% endbuttons %}
+            </div>
+        </form>
+{% endblock %}

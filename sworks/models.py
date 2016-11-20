@@ -9,7 +9,6 @@ class Student(models.Model):
     user = models.OneToOneField(User)
     st_klass = models.IntegerField()
     st_group = models.IntegerField()
-
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name + '(' + str(self.st_klass) + '.' + str(
             self.st_group) + ')'
