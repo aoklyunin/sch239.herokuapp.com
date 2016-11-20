@@ -61,9 +61,9 @@ class LoginForm(forms.Form):
 class RegisterForm(forms.Form):
     username = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'mylogin'}),
                                label="Логин")
-    password = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'qwerty123'}),
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'rows': 1, 'cols': 20, 'placeholder': 'qwerty123'}),
                                label="Пароль")
-    rep_password = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'qwerty123'}),
+    rep_password = forms.CharField(widget=forms.PasswordInput(attrs={'rows': 1, 'cols': 20, 'placeholder': 'qwerty123'}),
                                    label="Повторите пароль")
     schooler_class = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': '10-3'}),
                                      label="Класс")
@@ -82,10 +82,6 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             if form.cleaned_data["password"] != form.cleaned_data["rep_password"]:
-                try:
-                    new_user = form.save()
-                except:
-                    print "was exception"
                 messages.error(request, "пароли не совпадают")
                 data = {'username':form.cleaned_data["username"],
                         'schooler_class': form.cleaned_data["schooler_class"],
@@ -95,15 +91,47 @@ def register(request):
                         'second_name': form.cleaned_data["second_name"],
                         }
                 return render(request, "sworks/register.html", {
-                        'form': RegisterForm(initial=data)
-                    })
+                        'form': RegisterForm(initial=data),
+                        'ins_form': LoginForm()
+                })
             else:
-                return HttpResponseRedirect("/")
+                musername = form.cleaned_data["username"]
+                schooler_class = form.cleaned_data["schooler_class"]
+                schooler_group = form.cleaned_data["schooler_group"]
+                mmail = form.cleaned_data["mail"]
+                name = form.cleaned_data["name"]
+                second_name = form.cleaned_data["second_name"]
+                mpassword = form.cleaned_data["password"]
+                #try:
+                user = User.objects.create_user(username=musername,
+                                                email=mmail,
+                                                password=mpassword)
+                if user:
+                    user.first_name = name
+                    user.last_name = second_name
+                    user.save()
+                    s = Student.objects.create(user = user,st_klass=schooler_class,st_group=schooler_group)
+                    s.save()
+                    return HttpResponseRedirect("/")
+            #except:
+            #        messages.error(request, "не получилось создать пользователя")
+            #        data = {'username': form.cleaned_data["username"],
+            #                'schooler_class': form.cleaned_data["schooler_class"],
+            #                'schooler_group': form.cleaned_data["schooler_group"],
+            #                'mail': form.cleaned_data["mail"],
+            #                'name': form.cleaned_data["name"],
+            #                'second_name': form.cleaned_data["second_name"],
+            #                }
+            #        return render(request, "sworks/register.html", {
+            #            'form': RegisterForm(initial=data),
+            #            'ins_form': LoginForm()
+            #        })
         else:
             return HttpResponseRedirect("/register/")
     else:
         return render(request, "sworks/register.html", {
-            'form': RegisterForm()
+            'form': RegisterForm(),
+            'login_form': LoginForm()
         })
 
 
@@ -140,7 +168,7 @@ def index(request):
     template = 'sworks/index.html'
     context = {
         "user": request.user,
-        "form": LoginForm(),
+        "login_form": LoginForm(),
     }
     return render(request, template, context)
 

@@ -1,15 +1,7 @@
-{# Load the tag library #}
-{% load bootstrap3 %}
-
-{# Load CSS and JavaScript #}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-
-{# Display django.contrib.messages as Bootstrap alerts #}
-{% bootstrap_messages %}
-
 <head>
+<title>
     {% block title %}My amazing site{% endblock %}
+</title>
     <style>
         .student-field {
             margin: 0 auto;
@@ -27,6 +19,16 @@
 
 
 </head>
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
 
 
 <body>
@@ -46,10 +48,10 @@
                 <form class="navbar-form navbar-right" role="form" action="." method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        {% bootstrap_field form.username %}
+                        {% bootstrap_field login_form.username %}
                     </div>
                     <div class="form-group">
-                        {% bootstrap_field form.password %}
+                        {% bootstrap_field login_form.password %}
                     </div>
                     <button type="submit" class="btn btn-success">Вход</button>
 
