@@ -80,7 +80,6 @@ class RegisterForm(forms.Form):
 
 def register(request):
     if request.method == 'POST':
-        print "request.POST %s" % request.POST
         form = RegisterForm(request.POST)
         if form.is_valid():
             if form.cleaned_data["password"] != form.cleaned_data["rep_password"]:
