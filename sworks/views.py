@@ -240,7 +240,7 @@ def addAttempt(request):
             student = Student.objects.get(user=request.user)
             comment_object = AttemptComment.objects.create(isReaded=False, text=comment, author=student)
             comment_object.save()
-            at = Attempt(student=student, task=task, add_date=date, link=link, checked=False)
+            at = Attempt(student=student, task=task, add_date=date, link=link)
             at.save()
             at.comment.add(comment_object)
             return HttpResponseRedirect('../../personal/')

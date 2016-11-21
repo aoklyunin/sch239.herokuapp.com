@@ -39,7 +39,7 @@ class Task(models.Model):
 class AttemptComment(models.Model):
     class Meta:
         ordering = ['-datetime']
-    isReaded = models.BooleanField()
+    isReaded = models.BooleanField(default=False)
     text = models.CharField(max_length=2000)
     author = models.ForeignKey(Student)
     datetime = models.DateTimeField(default=datetime.datetime.now())
@@ -55,10 +55,9 @@ class Attempt(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     add_date = models.DateTimeField(default=datetime.datetime.now())
-    checked = models.BooleanField()
     link = models.CharField(max_length=200)
     comment = models.ManyToManyField(AttemptComment)
-    isAccepted = models.BooleanField(default=False)
+    state = models.IntegerField(default=0)
 
     def __str__(self):
         return self.student.__unicode__()+ '(' + str(self.add_date) + ')'
