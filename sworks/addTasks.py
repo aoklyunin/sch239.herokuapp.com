@@ -1,7 +1,7 @@
 # coding=utf-8
 import datetime
 
-from sworks.models import Task
+from sworks.models import Task,TaskType,WorkType
 
 arr =[['02_Ведение в Java',0,0,'2016-09-12','0,1,2','3','4','5,6','7'],
 ['02_Введение в Java_ДЗ',0,1,'2016-09-12','0,1,2','3','4','5,6','7'],
@@ -31,6 +31,8 @@ arr =[['02_Ведение в Java',0,0,'2016-09-12','0,1,2','3','4','5,6','7'],
 ['06_Определитель_ДЗ',1,1,'2016-11-09','0','1','2','3','4']]
 
 for a in arr:
-    t = Task(task_name=a[0], task_type=a[1], work_type=a[2], pub_date=datetime.datetime.strptime(a[3],"%Y-%m-%d").date(),
-             est1=arr[4],est2=arr[5],est3=arr[6],est4=arr[7],est5=arr[8])
+    tt = TaskType.objects.get(name="Программирование" if a[1]==0 else "Эссе")
+    wt = WorkType.objects.get(name="В классе" if a[1] == 0 else "Дома")
+    t = Task(task_name=a[0], task_type=tt, work_type=wt, pub_date=datetime.datetime.strptime(a[3],"%Y-%m-%d").date(),
+             est1=a[4],est2=a[5],est3=a[6],est4=a[7],est5=a[8])
     t.save()

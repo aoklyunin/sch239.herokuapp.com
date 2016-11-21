@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .models import Student, Task, Attempt, AttemptComment
+from .models import Student, Task, Attempt, AttemptComment,TaskType,WorkType
 import datetime
 from django.contrib import auth
 from django.http import HttpResponse
@@ -28,10 +28,10 @@ class AttemptForm(forms.Form):
 class AddTaskForm(forms.Form):
     task_name = forms.CharField(max_length=200,
                                 widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': 'название задания'}), label="Название задания ")
-    task_type = forms.CharField(max_length=200,
-                                widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Классное/ДЗ")
-    work_type = forms.CharField(max_length=200,
-                                widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Тип работы")
+
+    task_type = forms.ModelChoiceField(queryset=TaskType.objects.all())
+    work_type = forms.ModelChoiceField(queryset=WorkType.objects.all())
+
     pub_date = forms.CharField(max_length=200,
                                widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Дата опубликовая")
     est1 = forms.CharField(max_length=200,
@@ -194,23 +194,24 @@ def addTask(request):
         form = AddTaskForm(request.POST)
         if form.is_valid():
             task_name = form.cleaned_data['task_name']
-            task_type = form.cleaned_data['task_type']
-            work_type = form.cleaned_data['work_type']
+            task_type = form.cleaned_data['task_type']=="В классе"
+            work_type = form.cleaned_data['work_type']=="Программирование"
             pub_date = form.cleaned_data['pub_date']
             est1 = form.cleaned_data['est1']
             est2 = form.cleaned_data['est2']
             est3 = form.cleaned_data['est3']
             est4 = form.cleaned_data['est4']
             est5 = form.cleaned_data['est5']
-            t = Task.objects.create(task_name = task_name, task_type =task_type,
+            t = Task.objects.create(task_name = task_name, task_type=task_type,
                                     work_type=work_type,pub_date=pub_date,
                                     est1= est1, est2=est2,est3=est3,
                                     est4=est4,est5=est5)
             t.save()
+
     data = {
         'task_name':'',
-        'task_type':0,
-        'work_type':0,
+        'task_type':'В классе',
+        'work_type':"Программирование",
         'pub_date':datetime.date.today(),
         'est1':'0,1,2',
         'est2':'3,4,5',

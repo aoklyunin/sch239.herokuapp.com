@@ -18,10 +18,29 @@ class Student(models.Model):
         return self.user.first_name + ' ' + self.user.last_name
 
 
+class WorkType(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+class TaskType(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+
 class Task(models.Model):
     task_name = models.CharField(max_length=200)
-    task_type = models.IntegerField()
-    work_type = models.IntegerField()
+    task_type = models.ForeignKey(TaskType)
+    work_type = models.ForeignKey(WorkType)
     pub_date = models.DateField('date published')
     est1 = models.CharField(max_length=200)
     est2 = models.CharField(max_length=200)
@@ -34,6 +53,7 @@ class Task(models.Model):
 
     def __unicode__(self):
         return self.task_name
+
 
 
 class AttemptComment(models.Model):
