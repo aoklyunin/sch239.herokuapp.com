@@ -37,7 +37,7 @@
         </div>
         <div class="navbar-collapse collapse">
             {% if user.is_authenticated == False %}
-                <form class="navbar-form navbar-right" role="form" action="." method="post">
+                <form class="navbar-form navbar-right" role="form" action="/../../." method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         {% bootstrap_field login_form.username %}

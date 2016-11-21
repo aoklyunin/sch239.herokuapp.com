@@ -29,8 +29,8 @@ class AddTaskForm(forms.Form):
     task_name = forms.CharField(max_length=200,
                                 widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': 'название задания'}), label="Название задания ")
 
-    task_type = forms.ModelChoiceField(queryset=TaskType.objects.all())
-    work_type = forms.ModelChoiceField(queryset=WorkType.objects.all())
+    task_type = forms.ModelChoiceField(queryset=TaskType.objects.all(),initial=0)
+    work_type = forms.ModelChoiceField(queryset=WorkType.objects.all(),initial=0)
 
     pub_date = forms.CharField(max_length=200,
                                widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Дата опубликовая")
@@ -194,8 +194,8 @@ def addTask(request):
         form = AddTaskForm(request.POST)
         if form.is_valid():
             task_name = form.cleaned_data['task_name']
-            task_type = form.cleaned_data['task_type']=="В классе"
-            work_type = form.cleaned_data['work_type']=="Программирование"
+            task_type = form.cleaned_data['task_type']
+            work_type = form.cleaned_data['work_type']
             pub_date = form.cleaned_data['pub_date']
             est1 = form.cleaned_data['est1']
             est2 = form.cleaned_data['est2']
@@ -207,6 +207,7 @@ def addTask(request):
                                     est1= est1, est2=est2,est3=est3,
                                     est4=est4,est5=est5)
             t.save()
+            messages.success("Задание добавлено")
 
     data = {
         'task_name':'',
