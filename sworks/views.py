@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from pygments.lexer import words
-
 from .models import Student, Task, Attempt, AttemptComment
 import datetime
 from django.contrib import auth
