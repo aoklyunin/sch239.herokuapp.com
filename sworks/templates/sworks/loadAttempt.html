@@ -1,0 +1,48 @@
+{% extends "sworks/base.html" %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+    <br><br>
+    <p><a class="btn btn-primary btn-lg" role="button" href="..\..\..\tasks\">назад к заданиям»</a></p>
+    {% if user.is_authenticated == False %}
+        <br><br>
+        <H1> Этот раздел Вам недоступен, необходимо войти</H1>
+        <br><br>
+    {% else %}
+        <br><br>
+
+        {{ taskName }}:{{ taskType }}
+    {% endif %}
+{% endblock %}
+
+{% block sub_content %}
+    Добавлены пользователи
+    <table class="table">
+    <tr>
+    <td>
+        <>Имя Фамилия</td>
+    <td> Логин</td>
+    <td> Пароль</td>
+    </tr>
+    {% for l in lst %}
+    <tr>
+    {% for key, value in l.items %}
+        <td>{{ value }}</td>
+    {% endfor %}
+    </tr>
+    {% endfor %}
+    </table>
+
+
+{% endblock %}
+
+

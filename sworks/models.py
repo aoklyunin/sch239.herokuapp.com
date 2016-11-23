@@ -6,17 +6,6 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Student(models.Model):
-    user = models.OneToOneField(User)
-    st_klass = models.CharField(max_length=200)
-    st_group = models.IntegerField()
-    def __str__(self):
-        return self.user.first_name + ' ' + self.user.last_name + '(' + str(self.st_klass) + '.' + str(
-            self.st_group) + ')'
-
-    def __unicode__(self):
-        return self.user.first_name + ' ' + self.user.last_name
-
 
 class WorkType(models.Model):
     name = models.CharField(max_length=200)
@@ -56,6 +45,33 @@ class Task(models.Model):
 
 
 
+class Mark(models.Model):
+    task = models.ForeignKey(Task)
+    m_value = models.IntegerField(default=0)
+    add_date = models.DateTimeField(default=datetime.datetime.now())
+    link = models.CharField(max_length=200)
+
+    def __str__(self):
+        return  self.task.task_name + '(' + str(self.add_date) + ') '+str(self.m_value)
+
+
+    def __unicode__(self):
+        return  self.task.task_name + '(' + str(self.add_date) + ' '+str(self.m_value)
+
+class Student(models.Model):
+    user = models.OneToOneField(User)
+    st_klass = models.CharField(max_length=200)
+    st_group = models.IntegerField()
+    marks = models.ManyToManyField(Mark)
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name + '(' + str(self.st_klass) + '.' + str(
+            self.st_group) + ')'
+
+    def __unicode__(self):
+        return self.user.first_name + ' ' + self.user.last_name
+
+
+
 class AttemptComment(models.Model):
     class Meta:
         ordering = ['-datetime']
@@ -69,6 +85,7 @@ class AttemptComment(models.Model):
 
     def __unicode__(self):
         return self.text
+
 
 
 class Attempt(models.Model):

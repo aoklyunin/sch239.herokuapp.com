@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-from .models import Student, Task, Attempt, AttemptComment,TaskType,WorkType
+from django.views.decorators.csrf import csrf_exempt
+
+from localCode.customOperation import transliterate, password_generator
+from localCode.moodle import MoodleHelper
+from .models import Student, Task, Attempt, AttemptComment,TaskType,WorkType, Mark
 import datetime
 from django.contrib import auth
 from django.http import HttpResponse
@@ -9,6 +13,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import logout
 from django import forms
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 
 class AddAttemptForm(forms.Form):
@@ -133,6 +138,85 @@ def register(request):
             'login_form': LoginForm()
         })
 
+def getValBySum(task,sum):
+        s = str(round(sum))
+        if s in task.est1:
+            return int(1)
+        elif s in task.est2:
+            return int(2)
+        elif s in task.est3:
+            return int(3)
+        elif s in task.est4:
+            return int(4)
+        elif s in task.est5:
+            return int(5)
+        else:
+            return int(0)
+
+
+def loadAttempt(request,taskName,taskType):
+    moodle = MoodleHelper()
+    lst = []
+    attempts = moodle.loadAttempts(taskName, taskType == "Программирование")
+    flg = False
+    for at in attempts:
+            user = User.objects.filter(first_name=at["name"], last_name=at["second_name"]).first()
+            if user:
+                student = Student.objects.filter(user=user).first()
+                task = Task.objects.get(task_name=taskName)
+                if student:
+                    m = Mark.objects.create(task=task,m_value=getValBySum(task, at["sum"]),link=at["href"])
+                    m.save()
+                    student.marks.add(m)
+                else:
+                    flg = True
+                    messages.error(request, "не найден студент " + at["name"] + " " + at["second_name"])
+
+    if len(lst)==0 and not flg:
+        return HttpResponseRedirect('../../../tasks/')
+    return render(request, "sworks/loadAttempt.html", {
+         'lst' : lst,
+         'taskName': taskName,
+         'taskType': taskType,
+         "user": request.user,
+    })
+
+def tasks(request):
+    context = {
+        "user": request.user,
+        "tasks": Task.objects.all()
+    }
+    return render(request, "sworks/tasks.html", context)
+
+def marks(request):
+    data = []
+    arr = [" ",]
+    for task in Task.objects.filter(pub_date__gt= datetime.date.today() - datetime.timedelta(days=30)):
+        arr.append(task.task_name)
+    data.append(arr)
+
+
+    for user in User.objects.all().order_by("last_name"):
+        student = Student.objects.filter(user=user).first()
+        if student:
+            arr = []
+            arr.append(student.user.last_name+" "+student.user.first_name)
+            dict = {}
+            for mark in student.marks.all():
+                dict[mark.task.task_name] = mark.m_value
+            for task in Task.objects.filter(pub_date__gt= datetime.date.today() - datetime.timedelta(days=30)):
+                if task.task_name in dict.keys():
+                    arr.append(dict[task.task_name])
+                else:
+                    arr.append(0)
+            data.append(arr)
+    context = {
+        "data": data,
+        "user": request.user,
+        "tasks": Task.objects.all()
+    }
+    return render(request, "sworks/marks.html", context)
+
 
 def personal(request):
     student = Student.objects.get(user=request.user)
@@ -188,6 +272,25 @@ def attempt(request, attempt_id):
         "user": request.user,
     })
 
+@csrf_exempt
+def getTasks(request):
+    if request.method=="POST":
+        if request.POST["begin_date"] or request.POST["end_date"]:
+            pickup_records = []
+            for task in Task.objects.all():
+                record = {"pub_date" : task.pub_date,
+                "task_name" : task.task_name,
+                "task_type" : task.task_type.name,
+                "work_type" : task.work_type.name,
+                "est1" : task.est1,
+                "est2" : task.est2,
+                "est3" : task.est3,
+                "est4" : task.est4,
+                "est5" : task.est5}
+                pickup_records.append(record)
+            return JsonResponse({'tasks': pickup_records}, safe=False)
+        return JsonResponse({'error': 'нет параметров дат'}, safe=False)
+    return  JsonResponse({'error': 'не тот запрос'}, safe=False)
 
 def addTask(request):
     if request.method == "POST":
@@ -207,7 +310,7 @@ def addTask(request):
                                     est1= est1, est2=est2,est3=est3,
                                     est4=est4,est5=est5)
             t.save()
-            messages.success("Задание добавлено")
+            messages.success(request,"Задание добавлено")
 
     data = {
         'task_name':'',
@@ -251,19 +354,6 @@ def addAttempt(request):
         "form": AddAttemptForm(),
         "user": request.user,
     })
-
-
-def errorAddingTemolate(request):
-    return HttpResponse("Error adding")
-
-
-def detail(request, task_id):
-    return HttpResponse("You're looking at question %s." % task_id)
-
-
-def results(request, task_id):
-    response = "You're looking at the results of question %s."
-    return HttpResponse(response % task_id)
 
 
 def attemptList(request):

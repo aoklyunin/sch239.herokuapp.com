@@ -11,6 +11,10 @@
 
 {% block sub_content %}
 {% if user.is_staff %}
+
+    {% block title %}Список попыток{% endblock %}
+
+
 <table class="table">
     <tr>
         <th>Фамилия Имся</th>
