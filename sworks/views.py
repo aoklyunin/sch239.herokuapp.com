@@ -78,7 +78,7 @@ def markView(request, mark_id):
 
     s = Student.objects.filter(marks=m).first()
     moodle = MoodleHelper()
-    arr = moodle.loadEssayAttempt(m.task.task_name)
+    arr = moodle.loadEssayAttempt(m.link)
 
     context = {
         "arr": arr,
