@@ -46,6 +46,7 @@
     {% endif %}
 {% endblock %}
 
+{% block sub_content %}
     {% if user.is_authenticated == False %}
     {% else %}
         <div class="mydiv">
@@ -92,3 +93,4 @@
             </table>
         </div>
     {% endif %}
+{% endblock %}
