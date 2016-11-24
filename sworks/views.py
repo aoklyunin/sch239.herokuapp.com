@@ -165,15 +165,24 @@ def loadAttempt(request,taskName,taskType):
                 student = Student.objects.filter(user=user).first()
                 task = Task.objects.get(task_name=taskName)
                 if student:
-                    m = Mark.objects.create(task=task,m_value=getValBySum(task, at["sum"]),link=at["href"])
+                    m = student.marks.filter(task=task).first()
+                    if m:
+                        if getValBySum(task, at["sum"])>m.m_value:
+                            m.m_value = getValBySum(task, at["sum"])
+                            m.link = at["href"]
+                    else:
+                        m = Mark.objects.create(task=task,m_value=getValBySum(task, at["sum"]),link=at["href"])
                     m.save()
                     student.marks.add(m)
                 else:
                     flg = True
                     messages.error(request, "не найден студент " + at["name"] + " " + at["second_name"])
+            else:
+                flg = True
+                messages.error(request, "не найден пользователь " + at["name"] + " " + at["second_name"])
 
     if len(lst)==0 and not flg:
-        return HttpResponseRedirect('../../../tasks/')
+        return HttpResponseRedirect('../../../marks/')
     return render(request, "sworks/loadAttempt.html", {
          'lst' : lst,
          'taskName': taskName,
@@ -188,32 +197,47 @@ def tasks(request):
     }
     return render(request, "sworks/tasks.html", context)
 
+def markView(request,mark_id):
+    m = Mark.objects.get(id = mark_id)
+    context = {
+        "m": m,
+        "user": request.user,
+    }
+    return render(request, "sworks/marks.html", context)
+
+class hrefClass():
+    def __init__(self,href,text):
+        self.href = href
+        self.text = text
+
 def marks(request):
     data = []
-    arr = [" ",]
-    for task in Task.objects.filter(pub_date__gt= datetime.date.today() - datetime.timedelta(days=30)):
-        arr.append(task.task_name)
-    data.append(arr)
-
+    tasks = Task.objects.filter(pub_date__gt= datetime.date.today() - datetime.timedelta(days=30)).order_by('pub_date')
+    tasknames = []
+    tasktypes = []
+    for task in tasks:
+        tasknames.append(task.task_name)
+        tasktypes.append(task.task_type.name)
 
     for user in User.objects.all().order_by("last_name"):
         student = Student.objects.filter(user=user).first()
         if student:
             arr = []
-            arr.append(student.user.last_name+" "+student.user.first_name)
+            arr.append(hrefClass("",student.user.last_name+" "+student.user.first_name))
             dict = {}
             for mark in student.marks.all():
-                dict[mark.task.task_name] = mark.m_value
-            for task in Task.objects.filter(pub_date__gt= datetime.date.today() - datetime.timedelta(days=30)):
-                if task.task_name in dict.keys():
-                    arr.append(dict[task.task_name])
+                dict[mark.task.task_name] = mark
+            for task, ttype in zip(tasknames, tasktypes):
+                if task in dict.keys():
+                    href = "../../../markView/"+str(dict[task].id)
+                    arr.append(hrefClass(href,dict[task].m_value))
                 else:
-                    arr.append(0)
+                    arr.append(hrefClass("",0))
             data.append(arr)
     context = {
         "data": data,
         "user": request.user,
-        "tasks": Task.objects.all()
+        "tasks": tasks
     }
     return render(request, "sworks/marks.html", context)
 
