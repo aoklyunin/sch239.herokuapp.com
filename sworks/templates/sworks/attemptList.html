@@ -8,28 +8,36 @@
 
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
+{% block title %}Список попыток{% endblock %}
+{% block style_block %}
+    .namediv {
+    width:13em;
+    }
+    tasknamediv{
+    width:13em;
+    }
 
+{% endblock %}
 {% block sub_content %}
 {% if user.is_staff %}
 
-    {% block title %}Список попыток{% endblock %}
-
-
 <table class="table">
     <tr>
-        <th>Фамилия Имся</th>
+        <th>Фамилия Имя</th>
         <th>Задание</th>
         <th>Ссылка</th>
         <th>Комментарий</th>
         <th>Проверить</th>
 
     </tr>
-    {% for attempt in attempt_list %}
+    {% for attempt,mark in arr %}
         <tr>
-            <td>
-                {{ attempt.student.name }}
+            <td class="namediv" >
+                {{ attempt.student.user.first_name }}
+                {{ attempt.student.user.last_name }}<br>
+                ({{ mark.m_value }})
             </td>
-            <td>
+            <td class="tasknamediv">
                 {{ attempt.task.task_name }} <br>
                 {{ attempt.task.pub_date }}
             </td>
@@ -38,19 +46,20 @@
                 <script type="text/javascript">
                     $('a[rel=external]').attr('target', '_blank');
                 </script>
+
             </td>
 
             <td>
                 <div>
-                    {{ attempt.comment }}
+                    {{ attempt.comment.last }}
                 </div>
             </td>
             <td>
-                <form method="get" action="/attempt/remove/{{ attempt.pk }}">
+                <form method="get" action="/attempt/success/{{ attempt.pk }}/">
                     {% csrf_token %}
-
-                    <button type="submit" class="btn btn-primary">
-                        Проверена
+                    <a href="../../attempt/{{ attempt.id }}/" class="btn btn-primary" rel="button">Обсуждение</a>
+                    <button type="submit" class="btn btn-success">
+                        Принять
                     </button>
                 </form>
             </td>

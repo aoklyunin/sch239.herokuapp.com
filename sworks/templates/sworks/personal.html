@@ -29,10 +29,19 @@
             {% for attempt in attempt_list %}
                 <tr>
                     <td>
-                        {{ attempt.task.task_name }}
+                        {{ attempt.task.task_name }}<br>
+                        {% if  attempt.state == 0 %}
+                            <p class="muted">(Попытка не просмотрена)</p>
+                        {% else %}
+                            {% if  attempt.state == 1 %}
+                                <p class="text-info">(Попытка просмотрена)</p>
+                            {% else %}
+                                <p class="text-success">(Попытка принята)</p>
+                            {% endif %}
+                        {% endif %}
                     </td>
                     <td>
-                        {{ attempt.comment.first }}
+                        {{ attempt.comment.last }}
                     </td>
                     <td>
                         <a href={{ attempt.link }}  rel="external">Ссылка на попытку</a>
@@ -41,7 +50,7 @@
                         </script>
                     </td>
                     <td>
-                         <a href="../../attempt/{{ attempt.id }}/" class="btn btn-primary" rel="button">Обсуждение</a>
+                        <a href="../../attempt/{{ attempt.id }}/" class="btn btn-primary" rel="button">Обсуждение</a>
                     </td>
                 </tr>
             {% endfor %}

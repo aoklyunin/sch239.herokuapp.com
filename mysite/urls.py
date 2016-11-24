@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^logout/$', sworks.auth.logout_view),
     url(r'^register/$', sworks.auth.register),
     url(r'^attempt/(?P<attempt_id>[0-9]+)/$', sworks.views.attempt),
+    url(r'^attempt/success/(?P<attempt_id>[0-9]+)/$', sworks.views.success),
     url(r'^personal/$', sworks.views.personal),
     url(r'^addTask/$', sworks.views.addTask),
     url(r'^getTasks/$', sworks.views.getTasks),

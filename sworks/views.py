@@ -1,20 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.views.decorators.csrf import csrf_exempt
 from localCode.moodle import MoodleHelper
-from sworks.forms import RegisterForm, LoginForm, AttemptForm, AddTaskForm, AddAttemptForm
-from .models import Student, Task, Attempt, AttemptComment, TaskType, WorkType, Mark
+from sworks.forms import  LoginForm, AttemptForm, AddTaskForm, AddAttemptForm, MarkForm
+from .models import Student, Task, Attempt, AttemptComment, Mark
 import datetime
-from django.contrib import auth
-from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-
-
-
 
 
 def getValBySum(task, sum):
@@ -256,11 +250,22 @@ def addAttempt(request):
 
 def attemptList(request):
     if request.user.is_authenticated():
-        attempt_list = Attempt.objects.order_by('-add_date')
+        attempt_list = Attempt.objects.order_by('-add_date').filter(state__range=[0,1])
         template = 'sworks/attemptList.html'
+        markList = []
+        for attempt in attempt_list:
+            markList.append(Mark.objects.filter(task=attempt.task, student=attempt.student).first())
+            if attempt.state == 0:
+                attempt.state = 1
+                attempt.save()
         context = {
-            'attempt_list': attempt_list,
+            'arr': zip(attempt_list,markList)
+
         }
         return render(request, template, context)
-    else:
-        return HttpResponse("Ага, сейчас. Разбежался...")
+
+def success(request,attempt_id):
+    attempt = Attempt.objects.get(id = attempt_id)
+    attempt.state = 2
+    attempt.save()
+    return HttpResponseRedirect('../../../attemptList/')
