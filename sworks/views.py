@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.views.decorators.csrf import csrf_exempt
-
-from localCode.customOperation import transliterate, password_generator
 from localCode.moodle import MoodleHelper
 from .models import Student, Task, Attempt, AttemptComment,TaskType,WorkType, Mark
 import datetime
@@ -226,7 +224,7 @@ class hrefClass():
 
 def marks(request):
     data = []
-    tasks = Task.objects.filter(pub_date__gt= datetime.date.today() - datetime.timedelta(days=30)).order_by('pub_date')
+    tasks = Task.objects.filter(pub_date__gt= datetime.date.today() - datetime.timedelta(days=10)).order_by('pub_date')
     tasknames = []
     tasktypes = []
     for task in tasks:

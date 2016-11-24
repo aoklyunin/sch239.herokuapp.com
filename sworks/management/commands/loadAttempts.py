@@ -22,6 +22,7 @@ def getValBySum(task, sum):
     else:
         return int(0)
 
+
 class Command(BaseCommand):
     helf = 'load all attempts'
 
