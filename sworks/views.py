@@ -135,7 +135,7 @@ def marks(request):
 
 def personal(request):
     student = Student.objects.get(user=request.user)
-    at_list = Attempt.objects.filter(student=student)
+    at_list = Attempt.objects.filter(student=student).order_by('-state')
     return render(request, "sworks/personal.html", {
         'login_form': LoginForm(),
         'attempt_list': at_list,

@@ -41,7 +41,8 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{ attempt.comment.last }}
+                        <b>{{ attempt.comment.last.author.first_name }}: </b>
+                        {{ attempt.comment.last.text }}
                     </td>
                     <td>
                         <a href={{ attempt.link }}  rel="external">Ссылка на попытку</a>
