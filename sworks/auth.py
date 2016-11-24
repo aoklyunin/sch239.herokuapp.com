@@ -1,7 +1,7 @@
 from django.contrib import auth
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
-from django.core.checks import messages
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 

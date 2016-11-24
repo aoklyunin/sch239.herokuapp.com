@@ -149,12 +149,6 @@ def personal(request):
     })
 
 
-
-
-
-
-
-
 def attempt(request, attempt_id):
     at = Attempt.objects.get(id=attempt_id)
     if request.method == "POST":

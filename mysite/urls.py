@@ -6,7 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 import sworks.views
-
+import sworks.auth
 
 from django.conf import settings
 import django.views.static
@@ -29,6 +29,6 @@ urlpatterns = [
     url(r'^marks/$', sworks.views.marks),
     url(r'^markView/(?P<mark_id>[0-9]+)/$', sworks.views.markView),
     url(u'^loadAttempt/(?P<taskName>[а-яА-ЯёЁa-zA-Z0-9_]+)/(?P<taskType>[а-яА-ЯёЁa-zA-Z0-9_]+)/$', sworks.views.loadAttempt),
-    url(r'^', sworks.views.index, name='index'),
+    url(r'^', sworks.auth.index, name='index'),
 
 ]

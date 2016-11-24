@@ -1,6 +1,6 @@
 from django import forms
 
-from sworks.models import Task
+from sworks.models import Task, TaskType, WorkType
 
 
 class AddAttemptForm(forms.Form):
