@@ -50,10 +50,11 @@
             {% for comment in attempt.comment.all %}
                 <tr>
                     <td>
-                          <b>{{ comment.author.user.first_name }}: </b>
+
                         {{ comment.datetime }}
                     </td>
                     <td>
+                          <b>{{ comment.author.user.first_name }}: </b>
                         {{ comment.text }}
                     </td>
                 </tr>
