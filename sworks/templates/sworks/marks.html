@@ -11,7 +11,10 @@
 {% block title %}Личный кабинет{% endblock %}
 
 {% block style_block %}
-    table { border-collapse:separate; border-top: 1px solid grey; }
+    table {
+        border-collapse:separate; border-top: 1px solid grey;
+        font-size:80%;
+    }
     td, th {
     margin:0;
     border:1px solid grey;
@@ -19,7 +22,7 @@
     white-space:nowrap;
     }
     .mydiv {
-    width: 85%;
+    width: 83%;
     overflow-x:scroll;
     margin-left:15em;
     overflow-y:visible;
@@ -30,7 +33,7 @@
     width:15em;
     left:0;
     top:auto;
-    border:1px; /*only relevant for first row*/
+    border:1px solid grey;
     }
     .namediv{
         border:0px;
