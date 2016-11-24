@@ -25,7 +25,7 @@
     }
     .headcol {
     position:absolute;
-    width:5em;
+    width:10em;
     left:0;
     top:auto;
     }
@@ -62,7 +62,7 @@
             {% for arr in data %}
                 <tr>
                     {% for a in arr %}
-                        <td>
+                        <td {% if forloop.counter == 1 %} class="headcol" {%  endif %}>
 
                             {% if a.href == "" %}
                                 {{ a.text }}
