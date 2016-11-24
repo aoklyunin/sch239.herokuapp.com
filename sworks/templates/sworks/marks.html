@@ -53,8 +53,8 @@
             {% for arr in data %}
                 <tr>
                     {% for a in arr %}
-                        <td >
-                            {% if forloop.counter == 1 %} class="col-md-2" {% endif %}
+                        <td {% if forloop.counter == 1 %} class="col-md-5" {% endif %}>
+
                             {% if a.href == "" %}
                                 {{ a.text }}
                             {% else %}

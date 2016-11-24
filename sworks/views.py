@@ -12,6 +12,8 @@ from django.contrib.auth import logout
 from django import forms
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.shortcuts import render
+from django_tables2 import RequestConfig
 
 
 class AddAttemptForm(forms.Form):
@@ -227,6 +229,7 @@ class hrefClass():
         self.text = text
 
 
+
 def marks(request):
     data = []
     tasks = Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=40)).order_by('pub_date')
@@ -251,6 +254,8 @@ def marks(request):
                 else:
                     arr.append(hrefClass("", 0))
             data.append(arr)
+
+
     context = {
         "data": data,
         "user": request.user,
