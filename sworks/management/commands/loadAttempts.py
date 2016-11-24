@@ -40,7 +40,8 @@ class Command(BaseCommand):
                             if getValBySum(task, at["sum"]) > m.m_value:
                                 m.m_value = getValBySum(task, at["sum"])
                                 m.link = at["href"]
+                                m.save()
                         else:
                             m = Mark.objects.create(task=task, m_value=getValBySum(task, at["sum"]), link=at["href"])
-                        m.save()
-                        student.marks.add(m)
+                            m.save()
+                            student.marks.add(m)

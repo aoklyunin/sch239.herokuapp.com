@@ -25,7 +25,6 @@ urlpatterns = [
     url(r'^attempt/(?P<attempt_id>[0-9]+)/$', sworks.views.attempt),
     url(r'^personal/$', sworks.views.personal),
     url(r'^addTask/$', sworks.views.addTask),
-    url(r'^tasks/$', sworks.views.tasks),
     url(r'^getTasks/$', sworks.views.getTasks),
     url(r'^marks/$', sworks.views.marks),
     url(r'^markView/(?P<mark_id>[0-9]+)/$', sworks.views.markView),

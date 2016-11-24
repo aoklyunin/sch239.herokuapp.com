@@ -55,7 +55,7 @@ class AddTaskForm(forms.Form):
 class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.Textarea(attrs={'rows': 1, 'cols': 20, 'placeholder': 'Логин'}),
                                label="")
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Логин'}), label="")
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Пароль'}), label="")
 
     widgets = {
         'password': forms.PasswordInput(),
@@ -189,13 +189,6 @@ def loadAttempt(request,taskName,taskType):
          'taskType': taskType,
          "user": request.user,
     })
-
-def tasks(request):
-    context = {
-        "user": request.user,
-        "tasks": Task.objects.all()
-    }
-    return render(request, "sworks/tasks.html", context)
 
 class markForm(forms.Form):
     mark = forms.CharField(max_length=1,
