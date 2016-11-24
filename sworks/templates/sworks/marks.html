@@ -15,11 +15,10 @@
     margin:0;
     border-top-width:0px;
     }
-    table {
-    width: 100%;
-    height: 70%;
+    mydiv {
+    width: 600px;
     overflow-x:scroll;
-    margin-left:16em;
+    margin-left:5em;
     overflow-y:visible;
     padding-bottom:1px;
     }
@@ -44,38 +43,39 @@
 {% block sub_content %}
     {% if user.is_authenticated == False %}
     {% else %}
-        <table >
-            <thead>
-            <tr>
-                <th>Фамилия Имя</th>
-                {% for task in tasks %}
-                    <th class="long">
-                        <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a>
-                        <br>
-                        {{ task.pub_date }}
-                    </th>
-                {% endfor %}
-
-            </tr>
-            </thead>
-            <tbody>
-            {% for arr in data %}
+        <div class="mydiv">
+            <table>
+                <thead>
                 <tr>
-                    {% for a in arr %}
-                        <td {% if forloop.counter == 1 %} class="headcol" {%  endif %}>
-
-                            {% if a.href == "" %}
-                                {{ a.text }}
-                            {% else %}
-                                <a href="{{ a.href }}">{{ a.text }}</a>
-                            {% endif %}
-                        </td>
+                    <th>Фамилия Имя</th>
+                    {% for task in tasks %}
+                        <th class="long">
+                            <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a>
+                            <br>
+                            {{ task.pub_date }}
+                        </th>
                     {% endfor %}
 
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for arr in data %}
+                    <tr>
+                        {% for a in arr %}
+                            <td {% if forloop.counter == 1 %} class="headcol" {% endif %}>
 
+                                {% if a.href == "" %}
+                                    {{ a.text }}
+                                {% else %}
+                                    <a href="{{ a.href }}">{{ a.text }}</a>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endif %}
 {% endblock %}
