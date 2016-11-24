@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.views.decorators.csrf import csrf_exempt
 from localCode.moodle import MoodleHelper
-from .models import Student, Task, Attempt, AttemptComment,TaskType,WorkType, Mark
+from .models import Student, Task, Attempt, AttemptComment, TaskType, WorkType, Mark
 import datetime
 from django.contrib import auth
 from django.http import HttpResponse
@@ -30,13 +30,15 @@ class AttemptForm(forms.Form):
 
 class AddTaskForm(forms.Form):
     task_name = forms.CharField(max_length=200,
-                                widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': 'название задания'}), label="Название задания ")
+                                widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': 'название задания'}),
+                                label="Название задания ")
 
-    task_type = forms.ModelChoiceField(queryset=TaskType.objects.all(),initial=0)
-    work_type = forms.ModelChoiceField(queryset=WorkType.objects.all(),initial=0)
+    task_type = forms.ModelChoiceField(queryset=TaskType.objects.all(), initial=0)
+    work_type = forms.ModelChoiceField(queryset=WorkType.objects.all(), initial=0)
 
     pub_date = forms.CharField(max_length=200,
-                               widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Дата опубликовая")
+                               widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}),
+                               label="Дата опубликовая")
     est1 = forms.CharField(max_length=200,
                            widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Оценка 1")
     est2 = forms.CharField(max_length=200,
@@ -47,7 +49,6 @@ class AddTaskForm(forms.Form):
                            widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Оценка 4")
     est5 = forms.CharField(max_length=200,
                            widget=forms.Textarea(attrs={'rows': 1, 'cols': 40, 'placeholder': ''}), label="Оценка 5")
-
 
 
 class LoginForm(forms.Form):
@@ -136,67 +137,69 @@ def register(request):
             'login_form': LoginForm()
         })
 
-def getValBySum(task,sum):
-        s = str(round(sum))
-        if s in task.est1:
-            return int(1)
-        elif s in task.est2:
-            return int(2)
-        elif s in task.est3:
-            return int(3)
-        elif s in task.est4:
-            return int(4)
-        elif s in task.est5:
-            return int(5)
-        else:
-            return int(0)
+
+def getValBySum(task, sum):
+    s = str(round(sum))
+    if s in task.est1:
+        return int(1)
+    elif s in task.est2:
+        return int(2)
+    elif s in task.est3:
+        return int(3)
+    elif s in task.est4:
+        return int(4)
+    elif s in task.est5:
+        return int(5)
+    else:
+        return int(0)
 
 
-def loadAttempt(request,taskName,taskType):
+def loadAttempt(request, taskName, taskType):
     moodle = MoodleHelper()
     lst = []
     attempts = moodle.loadAttempts(taskName, taskType == "Программирование")
     flg = False
     for at in attempts:
-            user = User.objects.filter(first_name=at["name"], last_name=at["second_name"]).first()
-            if user:
-                student = Student.objects.filter(user=user).first()
-                task = Task.objects.get(task_name=taskName)
-                if student:
-                    m = student.marks.filter(task=task).first()
-                    if m:
-                        if getValBySum(task, at["sum"])>m.m_value:
-                            m.m_value = getValBySum(task, at["sum"])
-                            m.link = at["href"]
-                    else:
-                        m = Mark.objects.create(task=task,m_value=getValBySum(task, at["sum"]),link=at["href"])
-                    m.save()
-                    student.marks.add(m)
+        user = User.objects.filter(first_name=at["name"], last_name=at["second_name"]).first()
+        if user:
+            student = Student.objects.filter(user=user).first()
+            task = Task.objects.get(task_name=taskName)
+            if student:
+                m = student.marks.filter(task=task).first()
+                if m:
+                    if getValBySum(task, at["sum"]) > m.m_value:
+                        m.m_value = getValBySum(task, at["sum"])
+                        m.link = at["href"]
                 else:
-                    flg = True
-                    messages.error(request, "не найден студент " + at["name"] + " " + at["second_name"])
+                    m = Mark.objects.create(task=task, m_value=getValBySum(task, at["sum"]), link=at["href"])
+                m.save()
+                student.marks.add(m)
             else:
                 flg = True
-                messages.error(request, "не найден пользователь " + at["name"] + " " + at["second_name"])
+                messages.error(request, "не найден студент " + at["name"] + " " + at["second_name"])
+        else:
+            flg = True
+            messages.error(request, "не найден пользователь " + at["name"] + " " + at["second_name"])
 
-    if len(lst)==0 and not flg:
+    if len(lst) == 0 and not flg:
         return HttpResponseRedirect('../../../marks/')
     return render(request, "sworks/loadAttempt.html", {
-         'lst' : lst,
-         'taskName': taskName,
-         'taskType': taskType,
-         "user": request.user,
+        'lst': lst,
+        'taskName': taskName,
+        'taskType': taskType,
+        "user": request.user,
     })
+
 
 class markForm(forms.Form):
     mark = forms.CharField(max_length=1,
-                              widget=forms.Textarea(attrs={'rows': 1, 'cols': 1}),
-                              label="")
+                           widget=forms.Textarea(attrs={'rows': 1, 'cols': 1}),
+                           label="")
 
 
-def markView(request,mark_id):
+def markView(request, mark_id):
     m = Mark.objects.get(id=mark_id)
-    form = markForm(initial={"mark":m.m_value})
+    form = markForm(initial={"mark": m.m_value})
 
     if request.method == "POST":
         form = markForm(request.POST)
@@ -210,21 +213,23 @@ def markView(request,mark_id):
 
     context = {
         "arr": arr,
-        "student" : s,
+        "student": s,
         "m": m,
         "user": request.user,
         "form": form,
     }
     return render(request, "sworks/markView.html", context)
 
+
 class hrefClass():
-    def __init__(self,href,text):
+    def __init__(self, href, text):
         self.href = href
         self.text = text
 
+
 def marks(request):
     data = []
-    tasks = Task.objects.filter(pub_date__gt= datetime.date.today() - datetime.timedelta(days=10)).order_by('pub_date')
+    tasks = Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=40)).order_by('pub_date')
     tasknames = []
     tasktypes = []
     for task in tasks:
@@ -235,16 +240,16 @@ def marks(request):
         student = Student.objects.filter(user=user).first()
         if student:
             arr = []
-            arr.append(hrefClass("",student.user.last_name+" "+student.user.first_name))
+            arr.append(hrefClass("", student.user.last_name + " " + student.user.first_name))
             dict = {}
             for mark in student.marks.all():
                 dict[mark.task.task_name] = mark
             for task, ttype in zip(tasknames, tasktypes):
                 if task in dict.keys():
-                    href = "../../../markView/"+str(dict[task].id)+"/"
-                    arr.append(hrefClass(href,dict[task].m_value))
+                    href = "../../../markView/" + str(dict[task].id) + "/"
+                    arr.append(hrefClass(href, dict[task].m_value))
                 else:
-                    arr.append(hrefClass("",0))
+                    arr.append(hrefClass("", 0))
             data.append(arr)
     context = {
         "data": data,
@@ -308,25 +313,27 @@ def attempt(request, attempt_id):
         "user": request.user,
     })
 
+
 @csrf_exempt
 def getTasks(request):
-    if request.method=="POST":
+    if request.method == "POST":
         if request.POST["begin_date"] or request.POST["end_date"]:
             pickup_records = []
             for task in Task.objects.all():
-                record = {"pub_date" : task.pub_date,
-                "task_name" : task.task_name,
-                "task_type" : task.task_type.name,
-                "work_type" : task.work_type.name,
-                "est1" : task.est1,
-                "est2" : task.est2,
-                "est3" : task.est3,
-                "est4" : task.est4,
-                "est5" : task.est5}
+                record = {"pub_date": task.pub_date,
+                          "task_name": task.task_name,
+                          "task_type": task.task_type.name,
+                          "work_type": task.work_type.name,
+                          "est1": task.est1,
+                          "est2": task.est2,
+                          "est3": task.est3,
+                          "est4": task.est4,
+                          "est5": task.est5}
                 pickup_records.append(record)
             return JsonResponse({'tasks': pickup_records}, safe=False)
         return JsonResponse({'error': 'нет параметров дат'}, safe=False)
-    return  JsonResponse({'error': 'не тот запрос'}, safe=False)
+    return JsonResponse({'error': 'не тот запрос'}, safe=False)
+
 
 def addTask(request):
     if request.method == "POST":
@@ -341,23 +348,23 @@ def addTask(request):
             est3 = form.cleaned_data['est3']
             est4 = form.cleaned_data['est4']
             est5 = form.cleaned_data['est5']
-            t = Task.objects.create(task_name = task_name, task_type=task_type,
-                                    work_type=work_type,pub_date=pub_date,
-                                    est1= est1, est2=est2,est3=est3,
-                                    est4=est4,est5=est5)
+            t = Task.objects.create(task_name=task_name, task_type=task_type,
+                                    work_type=work_type, pub_date=pub_date,
+                                    est1=est1, est2=est2, est3=est3,
+                                    est4=est4, est5=est5)
             t.save()
-            messages.success(request,"Задание добавлено")
+            messages.success(request, "Задание добавлено")
 
     data = {
-        'task_name':'',
-        'task_type':'В классе',
-        'work_type':"Программирование",
-        'pub_date':datetime.date.today(),
-        'est1':'0,1,2',
-        'est2':'3,4,5',
-        'est3':'6,7,8',
-        'est4':'10,9',
-        'est5':'11'
+        'task_name': '',
+        'task_type': 'В классе',
+        'work_type': "Программирование",
+        'pub_date': datetime.date.today(),
+        'est1': '0,1,2',
+        'est2': '3,4,5',
+        'est3': '6,7,8',
+        'est4': '10,9',
+        'est5': '11'
     }
 
     return render(request, "sworks/addTask.html", {

@@ -12,7 +12,7 @@
 
 {% block style_block %}
     .col1 {
-        width: 100px; /* Ширина ячейки */
+        width: 200px; /* Ширина ячейки */
     }
 {% endblock %}
 {% block content %}
@@ -43,7 +43,7 @@
             {% for arr in data %}
                 <tr>
                     {% for a in arr %}
-                        <td {% if forloop.counter == 1 %} class="col1" {% endif %}>
+                        <td {% if forloop.counter == 1 %} class="col-md-2" {% endif %}>
 
                             {% if a.href == "" %}
                                 {{ a.text }}
