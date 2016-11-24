@@ -11,30 +11,30 @@
 {% block title %}Личный кабинет{% endblock %}
 
 {% block style_block %}
-    table { border-collapse:separate; border-top: 3px solid grey; }
+    table { border-collapse:separate; border-top: 1px solid grey; }
     td, th {
     margin:0;
-    border:3px solid grey;
+    border:1px solid grey;
     border-top-width:0px;
     white-space:nowrap;
     }
-    mydiv {
+    .mydiv {
     width: 600px;
     overflow-x:scroll;
-    margin-left:5em;
+    margin-left:12em;
     overflow-y:visible;
     padding-bottom:1px;
     }
     .headcol {
     position:absolute;
-    width:5em;
+    width:12em;
     left:0;
     top:auto;
     border-right: 0px none black;
-    border-top-width:3px; /*only relevant for first row*/
+    border-top-width:1px; /*only relevant for first row*/
     margin-top:-3px; /*compensate for top border*/
     }
-    .long { background:yellow; letter-spacing:1em; }
+
 {% endblock %}
 {% block content %}
     {% if user.is_authenticated == False %}
@@ -51,6 +51,7 @@
     {% else %}
         <div class="mydiv">
             <table>
+                <thead>
                 <tr>
                     <th class="headcol">Фамилия Имя</th>
                     {% for task in tasks %}
@@ -62,25 +63,26 @@
                     {% endfor %}
 
                 </tr>
+                </thead>
                 <tbody>
                 {% for arr in data %}
                     <tr>
                         {% for a in arr %}
                             {% if forloop.counter == 1 %}
                                 <th class="headcol">
-                                {% if a.href == "" %}
-                                    {{ a.text }}
-                                {% else %}
-                                    <a href="{{ a.href }}">{{ a.text }}</a>
-                                {% endif %}
+                                    {% if a.href == "" %}
+                                        {{ a.text }}
+                                    {% else %}
+                                        <a href="{{ a.href }}">{{ a.text }}</a>
+                                    {% endif %}
                                 </th>
                             {% else %}
                                 <td class="long">
-                                {% if a.href == "" %}
-                                    {{ a.text }}
-                                {% else %}
-                                    <a href="{{ a.href }}">{{ a.text }}</a>
-                                {% endif %}
+                                    {% if a.href == "" %}
+                                        {{ a.text }}
+                                    {% else %}
+                                        <a href="{{ a.href }}">{{ a.text }}</a>
+                                    {% endif %}
                                 </td>
                             {% endif %}
                         {% endfor %}
