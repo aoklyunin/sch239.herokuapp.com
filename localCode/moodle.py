@@ -31,7 +31,11 @@ class MoodleHelper():
         page = self.loadUrlParsed('http://mdl.sch239.net/course/view.php?id=44')
         # ищем ссылку с нужным нам текстом (по факту там не просто текст
         # он обёрнут в <span>
-        at_span = page.xpath("//a/span[text()='"+attempt_name+"']")[0]
+        #print(attempt_name)
+        try:
+            at_span = page.xpath("//a/span[text()='"+attempt_name+"']")[0]
+        except:
+            return []
         # получаем непосредственно ссылку
         at_href = at_span.getparent().get("href")
         # загружаем страницу теста
