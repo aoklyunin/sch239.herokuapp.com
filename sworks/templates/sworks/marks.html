@@ -54,11 +54,11 @@
                 <tr>
                     <th class="headcol">Фамилия Имя</th>
                     {% for task in tasks %}
-                        <tr class="long">
+                        <td class="long">
                             <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a>
                             <br>
                             {{ task.pub_date }}
-                        </tr>
+                        </td>
                     {% endfor %}
 
                 </tr>
