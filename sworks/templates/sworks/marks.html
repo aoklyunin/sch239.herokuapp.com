@@ -11,23 +11,31 @@
 {% block title %}Личный кабинет{% endblock %}
 
 {% block style_block %}
-    td, th {
-    margin:0;
-    border-top-width:0px;
-    }
-    mydiv {
-    width: 600px;
-    overflow-x:scroll;
-    margin-left:5em;
-    overflow-y:visible;
-    padding-bottom:1px;
-    }
-    .headcol {
-    position:absolute;
-    width:16em;
-
-    top:auto;
-    }
+        body { font:16px Calibri;}
+        table { border-collapse:separate; border-top: 3px solid grey; }
+        td, th {
+            margin:0;
+            border:3px solid grey;
+            border-top-width:0px;
+            white-space:nowrap;
+        }
+        div {
+            width: 600px;
+            overflow-x:scroll;
+            margin-left:5em;
+            overflow-y:visible;
+            padding-bottom:1px;
+        }
+        .headcol {
+            position:absolute;
+            width:5em;
+            left:0;
+            top:auto;
+            border-right: 0px none black;
+            border-top-width:3px; /*only relevant for first row*/
+            margin-top:-3px; /*compensate for top border*/
+        }
+        .long { background:yellow; letter-spacing:1em; }
 
 {% endblock %}
 {% block content %}
@@ -47,7 +55,7 @@
             <table>
                 <thead>
                 <tr>
-                    <th>Фамилия Имя</th>
+                    <th class="headcol">Фамилия Имя</th>
                     {% for task in tasks %}
                         <th class="long">
                             <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a>
@@ -62,7 +70,7 @@
                 {% for arr in data %}
                     <tr>
                         {% for a in arr %}
-                            <td {% if forloop.counter == 1 %} class="headcol" {% endif %}>
+                            <td class="{% if forloop.counter == 1 %}headcol{% else %} long {% endif %}">
 
                                 {% if a.href == "" %}
                                     {{ a.text }}
