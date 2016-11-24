@@ -11,9 +11,17 @@
 {% block title %}Личный кабинет{% endblock %}
 
 {% block style_block %}
-    .col1 {
-        width: 200px; /* Ширина ячейки */
+  .table-responsive>.fixed-column {
+    position: absolute;
+    display: inline-block;
+    width: auto;
+    border-right: 1px solid #ddd;
+}
+@media(min-width:768px) {
+    .table-responsive>.fixed-column {
+        display: none;
     }
+}
 {% endblock %}
 {% block content %}
     {% if user.is_authenticated == False %}
@@ -57,5 +65,22 @@
             {% endfor %}
 
         </table>
+
+        <script>
+        $(function(){
+    var $table = $('.table');
+    //Make a clone of our table
+    var $fixedColumn = $table.clone().insertBefore($table).addClass('fixed-column');
+
+    //Remove everything except for first column
+    $fixedColumn.find('th:not(:first-child),td:not(:first-child)').remove();
+
+    //Match the height of the rows to that of the original table's
+    $fixedColumn.find('tr').each(function (i, elem) {
+        $(this).height($table.find('tr:eq(' + i + ')').height());
+    });
+});
+
+        </script>
     {% endif %}
 {% endblock %}
