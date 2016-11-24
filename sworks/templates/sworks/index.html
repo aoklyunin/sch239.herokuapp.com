@@ -21,7 +21,8 @@
         <p><a class="btn btn-primary btn-lg" role="button" href="personal\">Личный кабинет »</a></p>
         {% if user.is_staff %}
             <p><a class="btn btn-success btn-lg" role="button" href="attemptList\">Список попыток»</a></p>
-            <p><a class="btn btn-success btn-lg" role="button" href="addTask\">Добавить задание»</a></p>
+            <p><a class="btn btn-success btn-lg" role="button" href="addTask\">Добавить задание»</a>
+            <a class="btn btn-success btn-lg" role="button" href="works\">Оценки»</a><</p>
         {%  endif %}
     {% endif %}
 {% endblock %}
