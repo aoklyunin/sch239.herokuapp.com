@@ -203,7 +203,7 @@ def markView(request,mark_id):
         "m": m,
         "user": request.user,
     }
-    return render(request, "sworks/marks.html", context)
+    return render(request, "sworks/markView.html", context)
 
 class hrefClass():
     def __init__(self,href,text):
