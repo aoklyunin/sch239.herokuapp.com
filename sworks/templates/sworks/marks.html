@@ -32,9 +32,11 @@
     top:auto;
     border-right: 0px none black;
     border-top-width:1px; /*only relevant for first row*/
-    margin-top:-3px; /*compensate for top border*/
+    margin-top:-1px; /*compensate for top border*/
     }
-
+    .namediv{
+        height:2em;
+    }
 {% endblock %}
 {% block content %}
     {% if user.is_authenticated == False %}
@@ -53,7 +55,7 @@
             <table>
                 <thead>
                 <tr>
-                    <th class="headcol">Фамилия Имя</th>
+                    <th class="headcol namediv">Фамилия Имя</th>
                     {% for task in tasks %}
                         <td class="long">
                             <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a>
