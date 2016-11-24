@@ -52,15 +52,14 @@
     {% if user.is_authenticated == False %}
     {% else %}
         <div class="mydiv">
-            <table class="table">
+            <table>
                 <thead>
                 <tr>
                     <th class="headcol namediv">Фамилия Имя</th>
                     {% for task in tasks %}
                         <td class="long">
-                            <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a>
-                            <br>
-                            {{ task.pub_date }}
+                            <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a>{{ task.pub_date|date:"m.d.y" }}
+
                         </td>
                     {% endfor %}
 
