@@ -46,7 +46,6 @@
     {% endif %}
 {% endblock %}
 
-{% block sub_content %}
     {% if user.is_authenticated == False %}
     {% else %}
         <div class="mydiv">
@@ -55,11 +54,11 @@
                 <tr>
                     <th class="headcol">Фамилия Имя</th>
                     {% for task in tasks %}
-                        <th class="long">
+                        <tr class="long">
                             <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a>
                             <br>
                             {{ task.pub_date }}
-                        </th>
+                        </tr>
                     {% endfor %}
 
                 </tr>
@@ -93,4 +92,3 @@
             </table>
         </div>
     {% endif %}
-{% endblock %}
