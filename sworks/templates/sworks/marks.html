@@ -11,39 +11,32 @@
 {% block title %}Личный кабинет{% endblock %}
 
 {% block style_block %}
-table {
-        width: 100%;
+td, th {
+        margin:0;
+        border:3px solid grey;
+        border-top-width:0px;
+        white-space:nowrap;
     }
+    table {
+        width: 100%;
+        height: 70%;
+        overflow-x:scroll;
+        margin-left:5em;
+        overflow-y:visible;
+        padding-bottom:1px;
+    }
+    .headcol {
+        position:absolute;
+        width:5em;
+        left:0;
+        top:auto;
+        border-right: 0px none black;
+        border-top-width:3px; /*only relevant for first row*/
+        margin-top:-3px; /*compensate for top border*/
+    }
+    .headcol:before {content: 'Row ';}
+    .long { background:yellow; letter-spacing:1em; }
 
-thead, tbody, tr, td, th { display: block; }
-
-tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-thead th {
-    height: 30px;
-
-    /*text-align: left;*/
-}
-
-tbody {
-    height: 80%;
-    overflow-y: auto;
-}
-
-thead {
-    /* fallback */
-}
-
-
-tbody td, thead th {
-    width: 19.2%;
-    float: left;
-}
 {% endblock %}
 {% block content %}
     {% if user.is_authenticated == False %}
@@ -61,13 +54,13 @@ tbody td, thead th {
         <table class= "table table-striped table-bordered table-hover table-condensed">
             <thead>
             <tr>
-                <td>Фамилия Имя</td>
+                <th class="headcol">Фамилия Имя</th>
                 {% for task in tasks %}
-                    <td>
+                    <th class="headcol">
                         <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a>
                     <br>
                     {{ task.pub_date }}
-                    </td>
+                    </th>
                 {% endfor %}
 
             </tr>
@@ -75,7 +68,7 @@ tbody td, thead th {
             {% for arr in data %}
                 <tr>
                     {% for a in arr %}
-                        <td  class="filterable-cell {% if forloop.counter == 1 %} col-md-5 {% endif %}>
+                        <td  class="long">
 
                             {% if a.href == "" %}
                                 {{ a.text }}
