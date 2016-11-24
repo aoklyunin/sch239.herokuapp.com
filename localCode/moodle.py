@@ -1,6 +1,7 @@
 # coding=utf-8
 import re
 from operator import itemgetter
+from unittest.mock import Mock
 
 import requests
 from lxml import html
@@ -99,6 +100,7 @@ class MoodleHelper():
         return arr
 
     def loadEssayAttempt(self,link):
+        print(li)
         page = self.loadUrlParsed(link)
         links = page.xpath("//*[@id=\"mod_quiz_navblock\"]/div[2]/div[1]/a")
         hrefs = []
@@ -118,3 +120,4 @@ class MoodleHelper():
                     ar.append(r)
                 arr.append(ar)
         return arr
+

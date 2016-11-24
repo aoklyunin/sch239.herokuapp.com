@@ -19,5 +19,11 @@ admin.site.register(Mark)
 
 UserAdmin.list_display = ('email', 'first_name', 'last_name','is_staff','username')
 
+class AttemptAdmin(admin.ModelAdmin):
+    fields = ('student','link')
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+admin.site.register(Attempt, AttemptAdmin)
+
+
