@@ -16,6 +16,7 @@
         font-size:95%;
     }
     td, th {
+
     margin:0;
     border:1px solid grey;
     border-top-width:0px;
@@ -35,6 +36,9 @@
     top:auto;
     border:1px solid grey;
     }
+    .myheader{
+        padding: 10px;
+    }
 {% endblock %}
 {% block content %}
     {% if user.is_authenticated == False %}
@@ -53,7 +57,7 @@
             <table>
                 <thead>
                 <tr>
-                    <th class="headcol">Фамилия Имя</th>
+                    <th class="headcol myheader">Фамилия Имя</th>
                     {% for task in tasks %}
                         <td class="long">
                             <a href="../../loadAttempt/{{ task.task_name }}/{{ task.task_type.name }}/">{{ task.task_name }}</a> ({{ task.pub_date|date:"m.d.y" }})
@@ -75,7 +79,7 @@
                                     {% endif %}
                                 </th>
                             {% else %}
-                                <td class="long">
+                                <td class="long" align="center">
                                     {% if a.href == "" %}
                                         {{ a.text }}
                                     {% else %}
