@@ -197,11 +197,32 @@ def tasks(request):
     }
     return render(request, "sworks/tasks.html", context)
 
+class markForm(forms.Form):
+    mark = forms.CharField(max_length=1,
+                              widget=forms.Textarea(attrs={'rows': 1, 'cols': 1}),
+                              label="")
+
+
 def markView(request,mark_id):
-    m = Mark.objects.get(id = mark_id)
+    m = Mark.objects.get(id=mark_id)
+    form = markForm(initial={"mark":m.m_value})
+
+    if request.method == "POST":
+        form = markForm(request.POST)
+        if form.is_valid():
+            m.m_value = form.cleaned_data["mark"]
+            m.save()
+
+    s = Student.objects.filter(marks=m).first()
+    moodle = MoodleHelper()
+    arr = moodle.loadEssayAttempt('http://mdl.sch239.net/mod/quiz/review.php?attempt=16443')
+
     context = {
+        "arr": arr,
+        "student" : s,
         "m": m,
         "user": request.user,
+        "form": form,
     }
     return render(request, "sworks/markView.html", context)
 
@@ -229,7 +250,7 @@ def marks(request):
                 dict[mark.task.task_name] = mark
             for task, ttype in zip(tasknames, tasktypes):
                 if task in dict.keys():
-                    href = "../../../markView/"+str(dict[task].id)
+                    href = "../../../markView/"+str(dict[task].id)+"/"
                     arr.append(hrefClass(href,dict[task].m_value))
                 else:
                     arr.append(hrefClass("",0))

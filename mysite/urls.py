@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^getTasks/$', sworks.views.getTasks),
     url(r'^marks/$', sworks.views.marks),
     url(r'^markView/(?P<mark_id>[0-9]+)/$', sworks.views.markView),
-    url(r'^loadAttempt/(?P<taskName>[а-яА-ЯёЁa-zA-Z0-9_]+)/(?P<taskType>[а-яА-ЯёЁa-zA-Z0-9_]+)/$', sworks.views.loadAttempt),
+    url(u'^loadAttempt/(?P<taskName>[а-яА-ЯёЁa-zA-Z0-9_]+)/(?P<taskType>[а-яА-ЯёЁa-zA-Z0-9_]+)/$', sworks.views.loadAttempt),
     url(r'^', sworks.views.index, name='index'),
 
 ]

@@ -1,4 +1,5 @@
 # coding=utf-8
+import re
 from operator import itemgetter
 
 import requests
@@ -92,4 +93,24 @@ class MoodleHelper():
                 pass
         arr = sorted(arr,key=itemgetter("name"))
         return arr
-# Печатает заголовок страницы
+
+    def loadEssayAttempt(self,link):
+        page = self.loadUrlParsed(link)
+        links = page.xpath("//*[@id=\"mod_quiz_navblock\"]/div[2]/div[1]/a")
+        hrefs = []
+        for l in links:
+            href = l.get('href')
+            if href.find('http')!=-1:
+                hrefs.append(href)
+        hrefs.append(link)
+        arr = []
+        for href in hrefs:
+            page = self.loadUrlParsed(href)
+            lst = page.xpath("//div[@class='ablock']/div/div/p")
+            s = ""
+            for l in lst:
+                ar = []
+                for r in re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', l.text):
+                    ar.append(r)
+                arr.append(ar)
+        return arr
