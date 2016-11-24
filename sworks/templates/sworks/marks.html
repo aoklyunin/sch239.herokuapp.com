@@ -11,32 +11,30 @@
 {% block title %}Личный кабинет{% endblock %}
 
 {% block style_block %}
-       
-        table { border-collapse:separate; border-top: 3px solid grey; }
-        td, th {
-            margin:0;
-            border:3px solid grey;
-            border-top-width:0px;
-            white-space:nowrap;
-        }
-        mydiv {
-            width: 600px;
-            overflow-x:scroll;
-            margin-left:5em;
-            overflow-y:visible;
-            padding-bottom:1px;
-        }
-        .headcol {
-            position:absolute;
-            width:5em;
-            left:0;
-            top:auto;
-            border-right: 0px none black;
-            border-top-width:3px; /*only relevant for first row*/
-            margin-top:-3px; /*compensate for top border*/
-        }
-        .long { background:yellow; letter-spacing:1em; }
-
+    table { border-collapse:separate; border-top: 3px solid grey; }
+    td, th {
+    margin:0;
+    border:3px solid grey;
+    border-top-width:0px;
+    white-space:nowrap;
+    }
+    div {
+    width: 600px;
+    overflow-x:scroll;
+    margin-left:5em;
+    overflow-y:visible;
+    padding-bottom:1px;
+    }
+    .headcol {
+    position:absolute;
+    width:5em;
+    left:0;
+    top:auto;
+    border-right: 0px none black;
+    border-top-width:3px; /*only relevant for first row*/
+    margin-top:-3px; /*compensate for top border*/
+    }
+    .long { background:yellow; letter-spacing:1em; }
 {% endblock %}
 {% block content %}
     {% if user.is_authenticated == False %}
@@ -70,14 +68,23 @@
                 {% for arr in data %}
                     <tr>
                         {% for a in arr %}
-                            <td class="{% if forloop.counter == 1 %}headcol{% else %} long {% endif %}">
-
+                            {% if forloop.counter == 1 %}
+                                <th class="headcol">
                                 {% if a.href == "" %}
                                     {{ a.text }}
                                 {% else %}
                                     <a href="{{ a.href }}">{{ a.text }}</a>
                                 {% endif %}
-                            </td>
+                                </th>
+                            {% else %}
+                                <td class="long">
+                                {% if a.href == "" %}
+                                    {{ a.text }}
+                                {% else %}
+                                    <a href="{{ a.href }}">{{ a.text }}</a>
+                                {% endif %}
+                                </td>
+                            {% endif %}
                         {% endfor %}
 
                     </tr>
