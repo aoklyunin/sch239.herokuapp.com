@@ -146,6 +146,6 @@ class MoodleHelper():
         return arr
 
 
-m = MoodleHelper()
-print(m.loadEssayAttempt('http://mdl.sch239.net/mod/quiz/review.php?attempt=16443'))
+#m = MoodleHelper()
+#print(m.loadEssayAttempt('http://mdl.sch239.net/mod/quiz/review.php?attempt=16443'))
 
