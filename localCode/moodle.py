@@ -110,11 +110,33 @@ class MoodleHelper():
         for href in hrefs:
             page = self.loadUrlParsed(href)
             try:
-                lst = page.xpath("//div[@class='ablock']/div/div/p")
+                lst = []
+                divs = page.xpath("//div[@class='ablock']/div/div")
+                for div in divs:
+                    if div.text:
+                        lst.append(div.text)
+                    else:
+                        ddc = div.getchildren()
+                        if ddc:
+                            for dd in ddc:
+                                if dd.text:
+                                    lst.append(dd.text)
+                                else:
+                                    dc = dd.getchildren()
+                                    if dc:
+                                        for d in dc:
+                                            #print(d.tag)
+                                            if d.tag == 'a':
+                                                lst.append(d.get('href'))
+                                            if d.tag =='p':
+                                                lst.append(d.text)
+
+
                 s = ""
                 for l in lst:
+                   # print(l)
                     ar = []
-                    rl = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', l.text)
+                    rl = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', l)
                     if rl:
                         for r in rl:
                             ar.append(r)
@@ -122,4 +144,8 @@ class MoodleHelper():
             except:
                 pass
         return arr
+
+
+m = MoodleHelper()
+print(m.loadEssayAttempt('http://mdl.sch239.net/mod/quiz/review.php?attempt=16443'))
 
