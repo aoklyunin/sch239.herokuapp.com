@@ -56,13 +56,10 @@
                 </div>
             </td>
             <td>
-                <form method="get" action="/attempt/success/{{ attempt.pk }}/">
-                    {% csrf_token %}
-                    <a href="../../attempt/{{ attempt.id }}/" class="btn btn-primary" rel="button">Обсуждение</a>
-                    <button type="submit" class="btn btn-success">
-                        Принять
-                    </button>
-                </form>
+                <a href="../../attempt/{{ attempt.id }}/" class="btn btn-primary" rel="button">Обсуждение</a>
+                <a href="../../attempt/success/{{ attempt.pk }}/" class="btn btn-success" rel="button">Принять</a>
+                <a href="../../attempt/drop/{{ attempt.pk }}/" class="btn btn-warning" rel="button">Слить</a>
+                
             </td>
         </tr>
     {% endfor %}
