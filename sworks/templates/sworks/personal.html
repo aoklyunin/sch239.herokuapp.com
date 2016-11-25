@@ -36,7 +36,11 @@
                             {% if  attempt.state == 1 %}
                                 <p class="text-info">(Попытка просмотрена)</p>
                             {% else %}
-                                <p class="text-success">(Попытка принята)</p>
+                                {% if  attempt.state == 3 %}
+                                    <p class="text-error">(Попытка отклонена)</p>
+                                {% else %}
+                                    <p class="text-success">(Попытка принята)</p>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                     </td>

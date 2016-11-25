@@ -250,7 +250,7 @@ def addAttempt(request):
 
 def attemptList(request):
     if request.user.is_authenticated():
-        attempt_list = Attempt.objects.order_by('-add_date').filter(state__range=[0,1])
+        attempt_list = Attempt.objects.order_by('-add_date').filter(state__range=[0,1]).order_by('comment__author')
         template = 'sworks/attemptList.html'
         markList = []
         for attempt in attempt_list:
@@ -267,5 +267,11 @@ def attemptList(request):
 def success(request,attempt_id):
     attempt = Attempt.objects.get(id = attempt_id)
     attempt.state = 2
+    attempt.save()
+    return HttpResponseRedirect('../../../attemptList/')
+
+def drop(request,attempt_id):
+    attempt = Attempt.objects.get(id = attempt_id)
+    attempt.state = 3
     attempt.save()
     return HttpResponseRedirect('../../../attemptList/')
