@@ -250,7 +250,7 @@ def addAttempt(request):
 
 def attemptList(request):
     if request.user.is_authenticated():
-        attempt_list = Attempt.objects.order_by('-add_date').filter(state__range=[0,1]).order_by('comment__author')
+        attempt_list = Attempt.objects.order_by('-add_date').filter(state__range=[0,1])
         template = 'sworks/attemptList.html'
         markList = []
         for attempt in attempt_list:
