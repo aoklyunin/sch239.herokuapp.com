@@ -30,19 +30,24 @@ class Command(BaseCommand):
         moodle = MoodleHelper()
         lst = []
         for task in Task.objects.all():
-            attempts = moodle.loadAttempts(task.task_name, task.task_type.name == "Программирование")
-            for at in attempts:
-                user = User.objects.filter(first_name=at["name"], last_name=at["second_name"]).first()
-                if user:
-                    student = Student.objects.filter(user=user).first()
-                    if student:
-                        m = student.marks.filter(task=task).first()
-                        if m:
-                            if getValBySum(task, at["sum"]) > m.m_value:
-                                m.m_value = getValBySum(task, at["sum"])
-                                m.link = at["href"]
+           # print (task.task_name)
+            try:
+                attempts = moodle.loadAttempts(task.task_name, task.task_type.name == "Программирование")
+                for at in attempts:
+                    user = User.objects.filter(first_name=at["name"], last_name=at["second_name"]).first()
+                    if user:
+                        student = Student.objects.filter(user=user).first()
+                        if student:
+                            m = student.marks.filter(task=task).first()
+                            if m:
+                                if getValBySum(task, at["sum"]) > m.m_value:
+                                    m.m_value = getValBySum(task, at["sum"])
+                                    m.link = at["href"]
+                                    m.save()
+                            else:
+                                m = Mark.objects.create(task=task, m_value=getValBySum(task, at["sum"]), link=at["href"])
                                 m.save()
-                        else:
-                            m = Mark.objects.create(task=task, m_value=getValBySum(task, at["sum"]), link=at["href"])
-                            m.save()
-                            student.marks.add(m)
+                                student.marks.add(m)
+            except:
+          #      print(" - ошибка загрузки:")
+                pass
