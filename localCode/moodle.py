@@ -146,7 +146,7 @@ class MoodleHelper():
         return arr
 
 
-m = MoodleHelper()
-for d in m.loadAttempts("12_Практика_1",True):
-    print(d["second_name"]+" "+str(d["sum"]))
+#m = MoodleHelper()
+#for d in m.loadAttempts("13_Практика_2",True):
+#    print(d["second_name"]+" "+str(d["sum"]))
 
