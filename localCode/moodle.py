@@ -30,7 +30,7 @@ class MoodleHelper():
         page = self.loadUrlParsed('http://mdl.sch239.net/course/view.php?id=44')
         # ищем ссылку с нужным нам текстом (по факту там не просто текст
         # он обёрнут в <span>
-        #print(attempt_name)
+        #print(attempt_name+" "+str(flgCode))
         try:
             at_span = page.xpath("//a/span[text()='"+attempt_name+"']")[0]
         except:
@@ -147,5 +147,6 @@ class MoodleHelper():
 
 
 #m = MoodleHelper()
-#print(m.loadEssayAttempt('http://mdl.sch239.net/mod/quiz/review.php?attempt=16443'))
+#for d in m.loadAttempts("12_Практика_1",True):
+#    print(d["second_name"]+" "+str(d["sum"]))
 
