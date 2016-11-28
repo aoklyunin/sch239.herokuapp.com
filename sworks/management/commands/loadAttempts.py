@@ -29,13 +29,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         moodle = MoodleHelper()
         lst = []
-        for task in Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)):
-            #print(task.task_type.name)
+        #for task in Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=10)):
+        for task in Task.objects.all():
+            #print(task.task_name)
             try:
                 tt = TaskType.objects.get(name= "Программирование")
                 attempts = moodle.loadAttempts(task.task_name, task.task_type==tt)
                 for at in attempts:
-                 #   print(at["second_name"]+" "+str(at["sum"]))
+                   # print(at["second_name"]+" "+str(at["sum"]))
                     user = User.objects.filter(first_name=at["name"], last_name=at["second_name"]).first()
                     if user:
                         student = Student.objects.filter(user=user).first()
@@ -43,7 +44,7 @@ class Command(BaseCommand):
                             m = student.marks.filter(task=task).first()
                             #print(student.user.last_name+" "+str(m.m_value))
                             if m:
-                              #  print(str(at["sum"])+" "+str(getValBySum(task, at["sum"])))
+                              #  print(str(m.m_value)+" "+str(getValBySum(task, at["sum"])))
                                 if getValBySum(task, at["sum"]) > m.m_value:
                                     m.m_value = getValBySum(task, at["sum"])
                                     m.link = at["href"]
@@ -53,6 +54,7 @@ class Command(BaseCommand):
                                 m = Mark.objects.create(task=task, m_value=getValBySum(task, at["sum"]), link=at["href"])
                                 m.save()
                                 student.marks.add(m)
+
             except:
-          #      print(" - ошибка загрузки:")
+          #     print(" - ошибка загрузки:")
                 pass
