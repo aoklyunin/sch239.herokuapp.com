@@ -107,7 +107,7 @@ def marks(request):
         tasknames.append(task.task_name)
         tasktypes.append(task.task_type.name)
 
-    for student in Student.objects.filter(st_klass="10-3").order_by("last_name"):
+    for student in Student.objects.filter(st_klass="10-3").order_by("user__last_name"):
         if student:
             arr = []
             arr.append(hrefClass("", student.user.last_name + " " + student.user.first_name))
