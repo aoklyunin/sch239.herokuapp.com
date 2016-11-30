@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^addAttempt/$', sworks.views.addAttempt, name='addAttempt'),
     url(r'^attemptList/$', sworks.views.attemptList, name='attemptList'),
+    url(r'^successAttemptList/$', sworks.views.successAttemptList, name='successAttemptList'),
     url(r'^logout/$', sworks.auth.logout_view),
     url(r'^register/$', sworks.auth.register),
     url(r'^attempt/(?P<attempt_id>[0-9]+)/$', sworks.views.attempt),

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -43,6 +44,19 @@ class Task(models.Model):
     def __unicode__(self):
         return self.task_name
 
+class CodeLanguage(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+class ProgramCode(models.Model):
+    class Meta:
+        ordering = ['n']
+
+    language = models.ForeignKey(CodeLanguage)
+    text = models.CharField(max_length=1000000)
+    n = models.IntegerField(default=0)
 
 
 class Mark(models.Model):
@@ -50,6 +64,7 @@ class Mark(models.Model):
     m_value = models.IntegerField(default=0)
     add_date = models.DateTimeField(default=datetime.datetime.now())
     link = models.CharField(max_length=200)
+    sources = models.ManyToManyField(ProgramCode)
 
     def __str__(self):
         return  self.task.task_name + '(' + str(self.add_date) + ') '+str(self.m_value)
@@ -89,6 +104,9 @@ class AttemptComment(models.Model):
 
 
 class Attempt(models.Model):
+    class Meta:
+        ordering = ['add_date']
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     add_date = models.DateTimeField(default=datetime.datetime.now())

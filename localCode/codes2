@@ -1,0 +1,188 @@
+0
+1 import java.util.Scanner;
+
+/**
+ * Created by nikitinmd.18 on 21.11.2016.
+ */
+
+public class add {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int a = (s.charAt(0)-'0')*100 + (s.charAt(1)-'0')*10 + (s.charAt(2)-'0');
+        int b = (s.charAt(4)-'0')*100 + (s.charAt(5)-'0')*10 + (s.charAt(6)-'0');
+        if (a == b){
+            System.out.println("=");
+        }
+        if (a > b){
+            System.out.println(">");
+        }
+        if(a < b){
+            System.out.println("<");
+        }
+    }
+}
+2 import java.util.Scanner;
+
+/**
+ * Created by nikitinmd.18 on 21.11.2016.
+ */
+
+public class add {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        float a = sc.nextFloat();
+        float b = sc.nextFloat();
+        int k = 0;
+        if (((a < 0) && (b >= 0)) || ((b < 0) && (a >= 0))) {
+            System.out.println("no such x");
+        } else {
+            if ((a == 0) && (b == 0)) {
+                System.out.println("any x");
+                k++;
+            }
+            if ((a == 0) && (b != 0)) {
+                System.out.println("no such x");
+                k++;
+            }
+            if ((a != 0) && (b == 0)) {
+                System.out.println("0.0");
+                k++;
+            }
+            if (k == 0) {
+                float c = b / a;
+                float d = -(b / a);
+                System.out.println(d + " " + c);
+            }
+        }
+    }
+}
+
+
+
+3 import java.util.Scanner;
+
+/**
+ * Created by nikitinmd.18 on 21.11.2016.
+ */
+
+public class add {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        double a = sc.nextDouble();
+        double b = sc.nextDouble();
+        int k = 0;
+        if (a == 0) {
+            if (b >=0) {
+                System.out.println("any x");
+            }
+            else{
+                System.out.println("no such x");
+            }
+        }
+        else {
+            if (b == 0) {
+                if (a < 0) {
+                    System.out.println("0.0");
+                } else {
+                    System.out.println("any x");
+                }
+            }
+            if (b != 0) {
+                if(a > 0){
+                    if( ((-b)/a)<0){
+                        System.out.println("any x");
+                    }
+                    else{
+                        System.out.printf("x<=%.1f or x>=%.1f",-(float)Math.sqrt(-b/a),(float)Math.sqrt(-b/a));
+                    }
+                }
+                else{
+                    if ((-b)/a<0){
+                        System.out.println("no such x");
+                    }
+                    else{
+                        System.out.println(-Math.sqrt(-b/a)+"<=x<="+Math.sqrt(-b/a));
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+4
+5 import java.util.Scanner;
+
+
+/**
+ * Created by nikitinmd.18 on 21.11.2016.
+ */
+
+public class add {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt();
+        int sum = 0;
+        int k = 1;
+        for (int i=0; i<a; i++){
+            int b = sc.nextInt();
+            if ((k == 2)||(k == 5)||(k == 8)){
+                sum+=b;
+            }
+            k++;
+        }
+        System.out.println(sum);
+    }
+}
+
+6 import java.util.Scanner;
+
+/**
+ * Created by nikitinmd.18 on 21.11.2016.
+ */
+
+public class add {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt();
+        int i = 0;
+        do {
+            a = a/ 10;
+            i++;
+        }
+        while (a > 0);
+        System.out.println(i);
+    }
+}
+7 import java.util.Scanner;
+
+/**
+ * Created by nikitinmd.18 on 21.11.2016.
+ */
+
+public class add {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+        int sum = 0;
+        int i = 0;
+        while (i<a){
+            sum += b;
+            i++;
+        }
+        System.out.println(sum);
+    }
+}
+
+8
+9
+10
+11

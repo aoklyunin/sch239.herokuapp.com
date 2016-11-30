@@ -246,6 +246,23 @@ def addAttempt(request):
         "user": request.user,
     })
 
+def successAttemptList(request):
+    if request.user.is_authenticated():
+        attempt_list = Attempt.objects.order_by('-add_date').filter(state=2)
+        template = 'sworks/attemptList.html'
+        markList = []
+        for attempt in attempt_list:
+            markList.append(Mark.objects.filter(task=attempt.task, student=attempt.student).first())
+            if attempt.state == 0:
+                attempt.state = 1
+                attempt.save()
+        context = {
+            'arr': zip(attempt_list,markList)
+
+        }
+        return render(request, template, context)
+
+
 
 def attemptList(request):
     if request.user.is_authenticated():

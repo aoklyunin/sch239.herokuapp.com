@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-from .models import Student,Task,Attempt,AttemptComment,WorkType,TaskType,Mark
+from .models import Student,Task,Attempt,AttemptComment,WorkType,TaskType,Mark, CodeLanguage, ProgramCode
 
 # Register your models here.
 admin.site.register(Student)
@@ -13,6 +13,9 @@ admin.site.register(Task)
 admin.site.register(AttemptComment)
 admin.site.register(WorkType)
 admin.site.register(TaskType)
+admin.site.register(CodeLanguage)
+admin.site.register(ProgramCode)
+
 
 
 UserAdmin.list_display = ('email', 'first_name', 'last_name','is_staff','username')
