@@ -1,5 +1,7 @@
 # coding=utf-8
+# программа для загрузки оценок
 import datetime
+
 from django.contrib.auth.models import User
 from django.core.management import BaseCommand
 
@@ -7,8 +9,9 @@ from localCode.moodle import MoodleHelper
 from sworks.models import Student, Task, Mark, TaskType
 
 
-def getValBySum(task, sum):
-    s = str(int(sum))
+# по заданию и кол-ву баллов получить оценку
+def getValBySum(task, cnt):
+    s = str(int(cnt))
     if s in task.est1:
         return int(1)
     elif s in task.est2:
@@ -23,38 +26,54 @@ def getValBySum(task, sum):
         return int(0)
 
 
+# описание класса програмы
 class Command(BaseCommand):
+    # описание программы
     helf = 'load all attempts'
 
     def handle(self, *args, **options):
+        # экземпляр класса для работы с mdl
         moodle = MoodleHelper()
-        lst = []
-        #for task in Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=10)):
-        for task in Task.objects.all():
-            #print(task.task_name)
+        # проходим по всем заданиям за последние 30 дней
+        for task in Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)):
+            # for task in Task.objects.all():
+            # print(task.task_name)
             try:
-                tt = TaskType.objects.get(name= "Программирование")
-                attempts = moodle.loadAttempts(task.task_name, task.task_type==tt)
+                # тип задания: программирование или эссе
+                tt = TaskType.objects.get(name="Программирование")
+                # загружаем попытку
+                attempts = moodle.loadAttempts(task.task_name, task.task_type == tt)
+                # проходим по загруженным попыткам
                 for at in attempts:
-                   # print(at["second_name"]+" "+str(at["sum"]))
+                    # ищем соотв. пользователя
                     user = User.objects.filter(first_name=at["name"], last_name=at["second_name"]).first()
+                    # если такой пользователь есть
                     if user:
+                        # ищем соотв. ему студента
                         student = Student.objects.filter(user=user).first()
+                        # если студент найден
                         if student:
+                            # получаем оценку по сумме
+                            val = getValBySum(task, at["sum"])
+                            # ищем оценку этого студента за выбранное задание
                             m = student.marks.filter(task=task).first()
-                            #print(student.user.last_name+" "+str(m.m_value))
+                            # если оценка уже есть
                             if m:
-                              #  print(str(m.m_value)+" "+str(getValBySum(task, at["sum"])))
-                                if getValBySum(task, at["sum"]) > m.m_value:
+                                # если новая оценка больше текущей
+                                if val > m.m_value:
+                                    # меняем оценку
                                     m.m_value = getValBySum(task, at["sum"])
+                                    # меняем ссылку
                                     m.link = at["href"]
+                                    # сохраняем изменения
                                     m.save()
-                                #    print(student.user.username)
                             else:
-                                m = Mark.objects.create(task=task, m_value=getValBySum(task, at["sum"]), link=at["href"])
+                                # создаём новую оценку
+                                m = Mark.objects.create(task=task, m_value=val, link=at["href"])
+                                # сохраняем оценку
                                 m.save()
+                                # добавляем оценку студенту
                                 student.marks.add(m)
 
             except:
-          #     print(" - ошибка загрузки:")
                 pass

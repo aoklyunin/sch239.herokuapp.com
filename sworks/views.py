@@ -1,82 +1,34 @@
 # -*- coding: utf-8 -*-
-from django.views.decorators.csrf import csrf_exempt
-from localCode.moodle import MoodleHelper
-from sworks.forms import  LoginForm, AttemptForm, AddTaskForm, AddAttemptForm, MarkForm
-from .models import Student, Task, Attempt, AttemptComment, Mark
 import datetime
+
 from django.contrib import messages
-from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+
+from localCode.moodle import MoodleHelper
+from sworks.forms import LoginForm, AttemptForm, AddTaskForm, AddAttemptForm, MarkForm
+from .models import Student, Task, Attempt, AttemptComment, Mark
 
 
-def getValBySum(task, sum):
-    s = str(round(sum))
-    if s in task.est1:
-        return int(1)
-    elif s in task.est2:
-        return int(2)
-    elif s in task.est3:
-        return int(3)
-    elif s in task.est4:
-        return int(4)
-    elif s in task.est5:
-        return int(5)
-    else:
-        return int(0)
-
-
-def loadAttempt(request, taskName, taskType):
-    moodle = MoodleHelper()
-    lst = []
-    attempts = moodle.loadAttempts(taskName, taskType == "Программирование")
-    flg = False
-    for at in attempts:
-        user = User.objects.filter(first_name=at["name"], last_name=at["second_name"]).first()
-        if user:
-            student = Student.objects.filter(user=user).first()
-            task = Task.objects.get(task_name=taskName)
-            if student:
-                m = student.marks.filter(task=task).first()
-                if m:
-                    if getValBySum(task, at["sum"]) > m.m_value:
-                        m.m_value = getValBySum(task, at["sum"])
-                        m.link = at["href"]
-                else:
-                    m = Mark.objects.create(task=task, m_value=getValBySum(task, at["sum"]), link=at["href"])
-                m.save()
-                student.marks.add(m)
-            else:
-                flg = True
-                messages.error(request, "не найден студент " + at["name"] + " " + at["second_name"])
-        else:
-            flg = True
-            messages.error(request, "не найден пользователь " + at["name"] + " " + at["second_name"])
-
-    if len(lst) == 0 and not flg:
-        return HttpResponseRedirect('../../../marks/')
-    return render(request, "sworks/loadAttempt.html", {
-        'lst': lst,
-        'taskName': taskName,
-        'taskType': taskType,
-        "user": request.user,
-        'login_form': LoginForm(),
-    })
-
-
-
+# просмотр оценки
 def markView(request, mark_id):
+    # получаем оценку
     m = Mark.objects.get(id=mark_id)
+    # в форму кладём изначально текущую оценку
     form = MarkForm(initial={"mark": m.m_value})
-
+    # если post-запрос
     if request.method == "POST":
+        # строим форму на основе post-запроса
         form = MarkForm(request.POST)
         if form.is_valid():
+            # меняем оценку
             m.m_value = form.cleaned_data["mark"]
             m.save()
-
+    # получаем студента, которому принадлежит оценка
     s = Student.objects.filter(marks=m).first()
+    # получаем ссылки из попытки
     moodle = MoodleHelper()
     arr = moodle.loadEssayAttempt(m.link)
 
@@ -91,37 +43,52 @@ def markView(request, mark_id):
     return render(request, "sworks/markView.html", context)
 
 
+# классы ссылки
 class hrefClass():
     def __init__(self, href, text):
         self.href = href
         self.text = text
 
 
-
+# журнал
 def marks(request):
+    # данные для журнала
     data = []
-    tasks = Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=40)).order_by('pub_date')
+    # получаем все задания за последние 30 дней
+    tasks = Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)).order_by('pub_date')
+    # имена заданий
     tasknames = []
+    # типы заданий
     tasktypes = []
+    # для экономии ресурсов заранее получаем все типы и названия заданий
     for task in tasks:
         tasknames.append(task.task_name)
         tasktypes.append(task.task_type.name)
-
+    # перебираем всех студентов
     for student in Student.objects.filter(st_klass="10-3").order_by("user__last_name"):
+        # если студент существует
         if student:
+            # строка журнала
             arr = []
+            # добавляем ссылку с текстом "фамилия имя"
             arr.append(hrefClass("", student.user.last_name + " " + student.user.first_name))
+            # делаем словарь для получения оценок
             dict = {}
+            # перебираем оценки студента
             for mark in student.marks.all():
+                # в качестве ключа используем имя задания
                 dict[mark.task.task_name] = mark
+            # перебираем имя и тип задания
             for task, ttype in zip(tasknames, tasktypes):
+                # если у пользователя есть оценка
                 if task in dict.keys():
+                    # возвращаем ссылку на просмотр оценки с текстом самой оценки
                     href = "../../../markView/" + str(dict[task].id) + "/"
                     arr.append(hrefClass(href, dict[task].m_value))
                 else:
+                    # делаем пустую ссылку
                     arr.append(hrefClass("", 0))
             data.append(arr)
-
 
     context = {
         "data": data,
@@ -132,24 +99,33 @@ def marks(request):
     return render(request, "sworks/marks.html", context)
 
 
+# личный кабинет
 def personal(request):
+    # по пользователю получаем имя
     student = Student.objects.get(user=request.user)
+    # список попыток, созданных текущем пользователем
     at_list = Attempt.objects.filter(student=student).order_by('-state')
     return render(request, "sworks/personal.html", {
         'login_form': LoginForm(),
         'attempt_list': at_list,
-
     })
 
 
+# просмотр попытки по id
 def attempt(request, attempt_id):
+    # ищем попытку с заданным id
     at = Attempt.objects.get(id=attempt_id)
+    # если пользователь хочет добавить комментарий
     if request.method == "POST":
         form = AttemptForm(request.POST)
         if form.is_valid():
+            # текст комментария
             text = form.cleaned_data['text']
+            # студент, написавший комментарий
             student = Student.objects.get(user=request.user)
+            # создаём комментарий
             comment_object = AttemptComment.objects.create(isReaded=False, text=text, author=student)
+            # сохраняем комментарий
             comment_object.save()
             at.comment.add(comment_object)
     form = AttemptForm()
@@ -161,6 +137,8 @@ def attempt(request, attempt_id):
     })
 
 
+# организация обработки внешнего post-запроса
+# для этого сделан декоратор @csrf_exempt
 @csrf_exempt
 def getTasks(request):
     if request.method == "POST":
@@ -182,6 +160,7 @@ def getTasks(request):
     return JsonResponse({'error': 'не тот запрос'}, safe=False)
 
 
+# добавление задания
 def addTask(request):
     if request.method == "POST":
         form = AddTaskForm(request.POST)
@@ -221,6 +200,8 @@ def addTask(request):
         "user": request.user
     })
 
+
+# добавление попытки
 def addAttempt(request):
     if request.method == "POST":
         form = AddAttemptForm(request.POST)
@@ -237,7 +218,8 @@ def addAttempt(request):
             at.comment.add(comment_object)
             return HttpResponseRedirect('../../personal/')
 
-    task_list = Task.objects.all().filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)).order_by('-pub_date')
+    task_list = Task.objects.all().filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)).order_by(
+        '-pub_date')
     return render(request, "sworks/addAttempt.html", {
         "task_list": task_list,
         "login_form": LoginForm(),
@@ -245,6 +227,8 @@ def addAttempt(request):
         "user": request.user,
     })
 
+
+# принятые попытки
 def successAttemptList(request):
     if request.user.is_authenticated():
         attempt_list = Attempt.objects.order_by('-add_date').filter(state=2)
@@ -256,14 +240,15 @@ def successAttemptList(request):
                 attempt.state = 1
                 attempt.save()
         context = {
-            'arr': zip(attempt_list,markList)
+            'arr': zip(attempt_list, markList)
         }
         return render(request, template, context)
 
 
+# необработанные попытки
 def attemptList(request):
     if request.user.is_authenticated():
-        attempt_list = Attempt.objects.order_by('-add_date').filter(state__range=[0,1])
+        attempt_list = Attempt.objects.order_by('-add_date').filter(state__range=[0, 1])
         template = 'sworks/attemptList.html'
         markList = []
         for attempt in attempt_list:
@@ -272,19 +257,23 @@ def attemptList(request):
                 attempt.state = 1
                 attempt.save()
         context = {
-            'arr': zip(attempt_list,markList)
+            'arr': zip(attempt_list, markList)
 
         }
         return render(request, template, context)
 
-def success(request,attempt_id):
-    attempt = Attempt.objects.get(id = attempt_id)
+
+# принять попытку по id
+def success(request, attempt_id):
+    attempt = Attempt.objects.get(id=attempt_id)
     attempt.state = 2
     attempt.save()
     return HttpResponseRedirect('../../../attemptList/')
 
-def drop(request,attempt_id):
-    attempt = Attempt.objects.get(id = attempt_id)
+
+# отклонить попытку
+def drop(request, attempt_id):
+    attempt = Attempt.objects.get(id=attempt_id)
     attempt.state = 3
     attempt.save()
     return HttpResponseRedirect('../../../attemptList/')

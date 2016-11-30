@@ -160,28 +160,42 @@ class MoodleHelper():
                  [node.tail])
         # filter removes possible Nones in texts and tails
         return ''.join(filter(None, parts))
-
+    # загрузка исходного кода из попытки
     def loadCodeFromAttempt(self, href):
+        # массив исходников
         arr = []
+        # загружаем распарсенную страницу
         page = self.loadUrlParsed(href)
+        # ищем список ссылок на задаия
         aLst = page.xpath("//div[@class='qn_buttons multipages']")[0].getchildren()
+        # массив ссылок на задание
         links = []
+        # добавляем ссылки в список
         for a in aLst:
             links.append(a.get("href"))
+        # т.к. первая ссылка - на эту же страницу (#), то вместо неё
+        # кладём ссылку на страницу
         links[0] = href
+        # проходим по всем ссылкам
         for l in links:
+            # загружаем страницу с решением
             page = self.loadUrlParsed(l)
             try:
+                # ищем поле ввода с программным кодом
                 tx = page.xpath("//textarea")[0]
+                # получаем текст программного кода
                 code = tx.text
+                # если код не найден, кладём в него пустую строку
                 if code == None:
                     code = ""
             except:
+                # если произошла ошибка (например, не найдено поле ввода)
+                # кладём в код пустую строку
                 code = ""
+            # добавляем в масив исходный код
             arr.append(code)
+        # возвращаем массив исходных кодов
         return arr
-
-
 
 #m = MoodleHelper()
 #arr = m.loadCodeFromAttempt('http://mdl.sch239.net/mod/quiz/review.php?attempt=16346#')
@@ -189,4 +203,4 @@ class MoodleHelper():
 #for a in arr:
 #    print(str(i)+" "+str(a))
 #    i+=1
-ca = CodeAnalysis(code_text)
+#ca = CodeAnalysis(code_text)

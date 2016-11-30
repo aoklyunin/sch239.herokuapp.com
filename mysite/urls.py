@@ -1,37 +1,42 @@
 # -*- coding: utf-8 -*-
-
+# обработчик адресов сайта
 from django.conf.urls import include, url
-
 from django.contrib import admin
-admin.autodiscover()
-
-import sworks.views
 import sworks.auth
 
-from django.conf import settings
-import django.views.static
-
-#import settings
-# Examples:
-# url(r'^$', 'gettingstarted.views.home', name='home'),
-# url(r'^blog/', include('blog.urls')),
+# автоопределение администратора
+admin.autodiscover()
 
 urlpatterns = [
+    # панель администратора
     url(r'^admin/', include(admin.site.urls)),
+    # добавить попытку
     url(r'^addAttempt/$', sworks.views.addAttempt, name='addAttempt'),
+    # список попыток
     url(r'^attemptList/$', sworks.views.attemptList, name='attemptList'),
+    # список принятых попыток
     url(r'^successAttemptList/$', sworks.views.successAttemptList, name='successAttemptList'),
+    # выход из сайта
     url(r'^logout/$', sworks.auth.logout_view),
+    # регистрация на сайте
     url(r'^register/$', sworks.auth.register),
+    # просмотр попытки
     url(r'^attempt/(?P<attempt_id>[0-9]+)/$', sworks.views.attempt),
+    # принять попытку
     url(r'^attempt/success/(?P<attempt_id>[0-9]+)/$', sworks.views.success),
+    # отклонить попытку
     url(r'^attempt/drop/(?P<attempt_id>[0-9]+)/$', sworks.views.drop),
+    # личный кабинет
     url(r'^personal/$', sworks.views.personal),
+    # добавить задание
     url(r'^addTask/$', sworks.views.addTask),
+    # получить задание
     url(r'^getTasks/$', sworks.views.getTasks),
+    # журнал
     url(r'^marks/$', sworks.views.marks),
+    # просмотр конкретного задания
     url(r'^markView/(?P<mark_id>[0-9]+)/$', sworks.views.markView),
-    url(u'^loadAttempt/(?P<taskName>[а-яА-ЯёЁa-zA-Z0-9_]+)/(?P<taskType>[а-яА-ЯёЁa-zA-Z0-9_]+)/$', sworks.views.loadAttempt),
+    # на главную страницу
     url(r'^', sworks.auth.index, name='index'),
 
 ]

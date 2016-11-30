@@ -1,10 +1,10 @@
 # coding=utf-8
-
+# В этом файлике лежат регулярные выражения, соответствующие лексемам java
 R_IMPORT=["import(.*?);",lambda s:s[len("import"):-1].strip(),False,"import"]
 R_PUBLIC = ["public",lambda s:s[len("public"):].strip(),False,"public"]
 R_STATIC = ["static",lambda s:s[len("static"):].strip(),False,"static"]
 R_CLASS = ["class",lambda s:s[len("class"):].strip(),False,"class"]
-
+# самые распространённые лексемы
 R_BACE_TYPES = "(void|byte|Byte|short|Short|int|Integer|long|Long|char|Character|float|Float|double|Double|String|StringBuilder|StringBuffer)"
 R_SPACE_AND_LN_ONE_OR_MORE = "\s+"
 R_ANY_COUNT_OF_ANY_SYMBOL = "(.*?)"
@@ -26,7 +26,6 @@ R_ARRAY_DEQUE = "ArrayDeque ?< ?(.*?) ?>"
 R_COLLECTIONS = "(" + R_HASH_TABLE + "|" + R_HASH_MAP + "|" + R_LINKED_HASH_MAP + "|" + R_TREE_MAP + "|" + R_WEAK_HASH_MAP + "|" + R_VECTOR + "|" + R_STACK + "|" + R_LINKED_LIST + "|" + R_HASH_SET + "|" + R_LINKED_HASH_SET + "|" + R_TREE_SET + "|" + R_PRIORITY_QUEQUE + "|" + R_ARRAY_DEQUE + ")"
 
 R_TYPES = [ R_COLLECTIONS[:-1]+"|"+R_BACE_TYPES[1:-1]+")",lambda s:s,False,"type"]
-print(R_TYPES)
 
 R_VAR_NAME = ["[a-zA-Z0-9]+",lambda s:s,False,"varName"]
 R_VALUE = "(-?[0-9]+.?[0-9]*|((\"|\')(.*?)(\"|\'))"
@@ -43,15 +42,9 @@ C_DOUBLE_BRACKET = ["\{\}",lambda s:s,False,"courly_bracket"]
 S_DOUBLE_BRACKET = ["\[\]",lambda s:s,False,"square_bracket"]
 R_DOUBLE_BRACKET = ["\(\)",lambda s:s,False,"round_bracket"]
 
-# обращение по индексу к элементу
-# регулярка вызова метода
-# нужно написать для многоэтажных вызовов
-# надо учитывать, что присвоение может быть многоэтажным
-# sc = new Scanner(System.in);- создание объекта класса
-# if, if-else
-# арифметические операции
-#точка с запято тоже отдельная лексема
 
+
+# программный код для тестового рабора исходника на лексемы
 code_text = """import java.util.Scanner
 
  ;import java.io.BufferedReader;
@@ -116,7 +109,7 @@ class     msc
     }
 }"""
 
-
+# список регулярок для поиска лексем
 REGEX = [
 R_IMPORT,
 R_CLASS ,
