@@ -221,7 +221,6 @@ def addTask(request):
         "user": request.user
     })
 
-
 def addAttempt(request):
     if request.method == "POST":
         form = AddAttemptForm(request.POST)
@@ -238,7 +237,7 @@ def addAttempt(request):
             at.comment.add(comment_object)
             return HttpResponseRedirect('../../personal/')
 
-    task_list = Task.objects.order_by('-pub_date')
+    task_list = Task.objects.all().filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)).order_by('-pub_date')
     return render(request, "sworks/addAttempt.html", {
         "task_list": task_list,
         "login_form": LoginForm(),
@@ -258,10 +257,8 @@ def successAttemptList(request):
                 attempt.save()
         context = {
             'arr': zip(attempt_list,markList)
-
         }
         return render(request, template, context)
-
 
 
 def attemptList(request):
