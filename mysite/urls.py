@@ -3,6 +3,7 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 import sworks.auth
+import sworks.views
 
 # автоопределение администратора
 admin.autodiscover()
