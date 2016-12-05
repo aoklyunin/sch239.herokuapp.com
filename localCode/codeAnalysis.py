@@ -26,12 +26,56 @@ class Lex():
         self.rex = rex
         self.val = val
 
+class SimpleCodeAnalysis:
+    text = ""
+    canonizedText = ""
+    root = tree()
+    # делаем исходный текст удобным для анализа
+    def canonize(self,text):
+        # убираем все лишние пробелы и переносы строк
+        text = re.sub("\s+", " ", text)
+        # убираем импорты за ненадобностью
+        text = re.sub("import(.*?);", "", text)
+        # убираем пробелы в начале и в конце текста
+        text = text.strip()
+        # убираем пробелы в примитивных конструкциях
+        for s in STOP_SYMBOLS:
+            text = text.replace(s+" ",s)
+            text = text.replace(" "+s,s)
+        return text
+    # формируем шилнгл по тексту
+    def genshingle(self,source):
+        import binascii
+        shingleLen = 6  # длина шингла
+        out = []
+        for i in range(len(source) - (shingleLen - 1)):
+            out.append(binascii.crc32(' '.join([x for x in source[i:i + shingleLen]]).encode('utf-8')))
+
+        return out
+    # сравниваем две даты с шинглами
+    def compaireTo(self, source2):
+        same = 0
+        for i in range(len(self.shingledData)):
+            if self.shingledData[i] in source2.shingledData:
+                same = same + 1
+
+        return same * 2 / float(len(self.shingledData) + len(source2.shingledData)) * 100
+
+    def __init__(self, text):
+        # запускаем парсинг всего текста, с главным элементом в качестве корня
+        self.text = text
+        self.canonizedText = self.canonize(text)
+        self.shingledData = self.genshingle(self.canonizedText)
+
+    def printStruct(self):
+
+        pass
+
 
 # Класс анализатора кода
 class CodeAnalysis:
     # корень дерева
     root = tree()
-
     # из текста выковыривает сождержимое скобок - это val,
     # и возвращается оставшийся текст
     def getTextFromBrackets(self, text):
@@ -141,3 +185,8 @@ class CodeAnalysis:
         text = re.sub("\s+", " ", text)
         # запускаем парсинг всего текста, с главным элементом в качестве корня
         self.parceText(text, self.root)
+
+
+ca = SimpleCodeAnalysis(code_text2)
+cb = SimpleCodeAnalysis(code_text3)
+print(ca.compaireTo(cb))

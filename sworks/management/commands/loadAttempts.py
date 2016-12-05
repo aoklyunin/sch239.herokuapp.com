@@ -67,6 +67,7 @@ class Command(BaseCommand):
                                     m.link = at["href"]
                                     # сохраняем изменения
                                     m.save()
+
                             else:
                                 # создаём новую оценку
                                 m = Mark.objects.create(task=task, m_value=val, link=at["href"])

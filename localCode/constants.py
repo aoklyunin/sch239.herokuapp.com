@@ -42,7 +42,9 @@ C_DOUBLE_BRACKET = ["\{\}",lambda s:s,False,"courly_bracket"]
 S_DOUBLE_BRACKET = ["\[\]",lambda s:s,False,"square_bracket"]
 R_DOUBLE_BRACKET = ["\(\)",lambda s:s,False,"round_bracket"]
 
-
+STOP_SYMBOLS = [
+    ",", "=", "+", "-", "/", "^", "!", "[", "]", "{", "}","(",")","&","|","<",">",";"
+]
 
 # программный код для тестового рабора исходника на лексемы
 code_text = """import java.util.Scanner
@@ -69,10 +71,12 @@ class     msc
     public
      static void main(String[]                       arge) {
 
-           Scanner sc = new Scanner(System.in);
+           Scanner sc = new Scanner(System.in)
+
+           ;
         float
          a =
-          sc.nextFloat();
+          sc.nextFloat()   ;
 
         float
          b
@@ -80,7 +84,7 @@ class     msc
          sc.nextFloat(    )                ;
         if            ((a ==    b) && (a    == 0)) {
 
-    System.out.println("        any x     "    );
+    System.out.println("any x"    )   ;
            }
         if ((a == b) &&
 
@@ -108,6 +112,80 @@ class     msc
         }
     }
 }"""
+
+code_text2  = """
+
+import java.util.Scanner;
+public class msc {
+
+    public              static void main(String[] arge) {
+        Scanner sc =            new Scanner(System.in);
+        int n  =         sc.nextInt()     ;
+        int m = sc.nextInt();
+        int    l = 0;
+        for (int i = 0; i<2; i++) {
+            l = m*n;
+        }
+        System.out.println(l);
+    }
+}
+"""
+
+code_text3="""
+import              java.util.Scanner;
+public            class msc                {
+    public static void main(String[] arge) {
+        Scanner            sc = new Scanner(System.in);
+        int n = sc.nextInt();
+                int cnt =           0;
+        n = n * 10;
+
+        for (int i = 0; n >= 10; i++) {
+            n = n / 10;
+            cnt++;
+        }
+        System.out.println(cnt);
+    }
+}
+"""
+
+
+code_text4 = """
+import java.util.Scanner        ;
+public class msc {
+
+    public static void main(String[] arge) {
+        Scanner        sc = new Scanner(System.in);
+        float         a = sc.nextFloat();
+        float b      = sc.nextFloat();
+        if ((a == b) && (a == 0)) {
+            System.out.println("any x");
+        }
+
+        if ((a == b) && ((a > 0) || (a < 0))) {
+            System.out.println("-1.0 " + "1.0");
+        }
+        if (((b == 0) && ((a > b) || (a < b)))) {
+            System.out.println(0.0);
+        }
+        if ((a!=0)&&(b!=0)&&(a!=b)&&(b%a==0)&&(b/a>0)) {
+            double x = b / a;
+            System.out.printf("%.1f", -x);
+            System.out.print(" ");
+            System.out.printf("%.1f", x);
+        }
+        if (((a == 0) && (a!=b))) {
+            System.out.println("no such x");
+        }
+        if ((a!=0)&&(b!=0)&&(b%a!=0)&&(b/a>0)) {
+            System.out.println("no such x");
+        }
+        if ((a!=0)&&(b!=0)&&(b/a<0)) {
+            System.out.println("no such x");
+        }
+    }
+}
+"""
 
 # список регулярок для поиска лексем
 REGEX = [
