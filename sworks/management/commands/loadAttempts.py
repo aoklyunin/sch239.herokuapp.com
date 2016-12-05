@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.management import BaseCommand
 
 from localCode.moodle import MoodleHelper
-from sworks.models import Student, Task, Mark, TaskType
+from sworks.models import Student, Task, Mark, TaskType, ProgramCode, CodeLanguage
 
 
 # по заданию и кол-ву баллов получить оценку
@@ -35,10 +35,10 @@ class Command(BaseCommand):
         # экземпляр класса для работы с mdl
         moodle = MoodleHelper()
         # проходим по всем заданиям за последние 30 дней
-        for task in Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)):
+        for task in Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=20)):
             # for task in Task.objects.all():
-            # print(task.task_name)
-            try:
+                print(task.task_name)
+            #try:
                 # тип задания: программирование или эссе
                 tt = TaskType.objects.get(name="Программирование")
                 # загружаем попытку
@@ -55,6 +55,7 @@ class Command(BaseCommand):
                         if student:
                             # получаем оценку по сумме
                             val = getValBySum(task, at["sum"])
+                            flgAddCode = False
                             # ищем оценку этого студента за выбранное задание
                             m = student.marks.filter(task=task).first()
                             # если оценка уже есть
@@ -65,9 +66,11 @@ class Command(BaseCommand):
                                     m.m_value = getValBySum(task, at["sum"])
                                     # меняем ссылку
                                     m.link = at["href"]
+                                    m.sources.clear()
                                     # сохраняем изменения
                                     m.save()
 
+                                    flgAddCode = True
                             else:
                                 # создаём новую оценку
                                 m = Mark.objects.create(task=task, m_value=val, link=at["href"])
@@ -75,6 +78,19 @@ class Command(BaseCommand):
                                 m.save()
                                 # добавляем оценку студенту
                                 student.marks.add(m)
+                                flgAddCode = True
 
-            except:
-                pass
+                            if task.task_type ==tt and (flgAddCode or (m and not m.sources.all())):
+                                i = 0
+                                for code in moodle.loadCodeFromAttempt(at["href"]):
+                                    i=i+1
+                                    pg = ProgramCode.objects.create(language = CodeLanguage.objects.get(name="Java"),
+                                                                    text = code,
+                                                                    num = i,
+                                                                    task = task)
+                                    pg.save()
+                                    m.sources.add(pg)
+
+
+            #except:
+            #    pass

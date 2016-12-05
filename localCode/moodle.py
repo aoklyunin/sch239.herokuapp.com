@@ -162,6 +162,7 @@ class MoodleHelper():
         return ''.join(filter(None, parts))
     # загрузка исходного кода из попытки
     def loadCodeFromAttempt(self, href):
+        print(href)
         # массив исходников
         arr = []
         # загружаем распарсенную страницу

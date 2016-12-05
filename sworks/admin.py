@@ -14,6 +14,7 @@ admin.site.register(TaskType)
 admin.site.register(CodeLanguage)
 admin.site.register(ProgramCode)
 
+
 # если нужно сделать своё представление модели в админке, нужно убрать её регистрацию из списка выше
 
 UserAdmin.list_display = ('email', 'first_name', 'last_name', 'is_staff', 'username')
