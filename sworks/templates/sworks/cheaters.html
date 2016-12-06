@@ -27,11 +27,11 @@
         {% for dat in data %}
             <h2>{{ dat.0 }}</h2>
             {%for ps in dat.1 %}
-                {{ps.n}}
+                {{ps.n}}<br>
                 {% for p in ps.vals.all %}
                     <b>{{p.unique }}</b> <br>
                     <b>{{p.student }}</b> <br>
-                    <a href="{{p.programCode.link}}">Ссылка</a>
+                    <a href="{{p.programCode.link}}">Ссылка</a><br>
                    <!-- <i>{{p.programCode.text}}</i> -->
                 {% endfor %}
                 <br><br>
