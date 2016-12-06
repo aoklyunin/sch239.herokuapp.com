@@ -69,3 +69,4 @@ sc = new Scanner(System.in);- создание объекта класса
 точка с запято тоже отдельная лексема asfas
 
 Убрать из кода puclic, static, class имя_класса, psvm, заменить System.out.print/ptintln/ptintf на print/ptintln/printf
+Scanner sc = new Scanner(System.in) заменить на sc

@@ -42,6 +42,10 @@
     .namehead{
        border: 0px
     }
+    .cheated {
+        background-color: red; /* Цвет фона под текстом параграфа */
+
+    }
 {% endblock %}
 {% block content %}
     {% if user.is_authenticated == False %}
@@ -82,13 +86,20 @@
                                     {% endif %}
                                 </th>
                             {% else %}
-                                <td class="long" align="center">
+                                {% if a.text=="-1" %}
+                                    <td class="long cheated" align="center">
+                                        <a href="{{ a.href }}">1</a>
+                                    {% endif %}
+                                    </td>
+                                {%else %}
+                                    <td class="long" align="center">
                                     {% if a.href == "" %}
                                         {{ a.text }}
                                     {% else %}
                                         <a href="{{ a.href }}">{{ a.text }}</a>
                                     {% endif %}
-                                </td>
+                                    </td>
+                                {%endif%}
                             {% endif %}
                         {% endfor %}
                     </tr>
