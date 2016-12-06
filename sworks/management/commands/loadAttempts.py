@@ -83,7 +83,7 @@ class Command(BaseCommand):
                             if task.task_type ==tt and (flgAddCode or (m and not m.sources.all())):
                                 i = 0
                                 for code in moodle.loadCodeFromAttempt(at["href"]):
-                                    print(code)
+                                    #print(code)
                                     i=i+1
                                     pg = ProgramCode.objects.create(language = CodeLanguage.objects.get(name="Java"),
                                                                     n = i)

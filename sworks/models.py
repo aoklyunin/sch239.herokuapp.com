@@ -78,6 +78,11 @@ class ProgramCode(models.Model):
     # номер (на всякий случай)
     n = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.text[:100]
+    def __unicode__(self):
+        return self.text[:100]
+
 # оценка
 class Mark(models.Model):
     # задание
