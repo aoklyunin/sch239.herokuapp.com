@@ -86,8 +86,7 @@ class Command(BaseCommand):
                                     i=i+1
                                     pg = ProgramCode.objects.create(language = CodeLanguage.objects.get(name="Java"),
                                                                     text = code,
-                                                                    num = i,
-                                                                    task = task)
+                                                                    n = i)
                                     pg.save()
                                     m.sources.add(pg)
 

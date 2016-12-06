@@ -77,13 +77,6 @@ class ProgramCode(models.Model):
     text = models.CharField(max_length=1000000)
     # номер (на всякий случай)
     n = models.IntegerField(default=0)
-    # наиболее похожий
-    mostSimilar = models.ForeignKey("self")
-    # задание
-    task = models.ForeignKey(Task)
-    # уникальность
-    uniqueness = models.FloatField(default=100)
-
 
 # оценка
 class Mark(models.Model):
@@ -97,7 +90,6 @@ class Mark(models.Model):
     link = models.CharField(max_length=200)
     # исходники
     sources = models.ManyToManyField(ProgramCode)
-
 
     def __str__(self):
         return self.task.task_name + '(' + str(self.add_date) + ') ' + str(self.m_value)
@@ -169,3 +161,10 @@ class Attempt(models.Model):
 
     def __unicode__(self):
         return self.student.__unicode__() + '.' + self.task.task_name + '(' + str(self.add_date) + ')'
+
+
+class PretendToCheat(models.Model):
+    studens = models.ManyToManyField(Student)
+    task = models.ForeignKey(Task)
+    programCodes = models.ManyToManyField(ProgramCode)
+    unique = models.FloatField(default=0)

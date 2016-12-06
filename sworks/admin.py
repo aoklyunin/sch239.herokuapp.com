@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-from .models import Student, Task, Attempt, AttemptComment, WorkType, TaskType, Mark, CodeLanguage, ProgramCode
+from .models import Student, Task, Attempt, AttemptComment, WorkType, TaskType, Mark, CodeLanguage, ProgramCode, PretendToCheat
 
 admin.site.register(Student)
 admin.site.register(Task)
@@ -13,6 +13,7 @@ admin.site.register(WorkType)
 admin.site.register(TaskType)
 admin.site.register(CodeLanguage)
 admin.site.register(ProgramCode)
+admin.site.register(PretendToCheat)
 
 
 # если нужно сделать своё представление модели в админке, нужно убрать её регистрацию из списка выше
