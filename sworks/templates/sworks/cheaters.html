@@ -24,8 +24,11 @@
 {% block sub_content %}
     {% if user.is_authenticated == False %}
     {% else %}
-        {%for dat in data %}
-            {{dat[0]}}
-        {%endfor%}
+        {% for dat in data %}
+            <h2>{{ dat.get(0) }}</h2>
+            {%for p in dat.get(1) %}
+
+            {% endfor %}
+        {% endfor %}
     {% endif %}
 {% endblock %}
