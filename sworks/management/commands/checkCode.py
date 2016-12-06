@@ -69,7 +69,9 @@ class Command(BaseCommand):
                                 #print (m2.link)
                                 #print (a.canonizedText,b.canonizedText)
                     for key,value in dict.iteritems():
+                        print "begin"
                         m1 = Mark.objects.filter(sources=key.sorceCode).first()
+                        print (key.sorceCode.link)
                         student = Student.objects.filter(marks=m1).first()
                         mainP = PretendVal.objects.create(programCode = key.sorceCode,mark = m1,student = student)
                         mainP.save()
@@ -79,11 +81,12 @@ class Command(BaseCommand):
                         for v in value:
                             m2 = Mark.objects.filter(sources=v[0].sorceCode).first()
                             student = Student.objects.filter(marks=m2).first()
-                            p = PretendVal.objects.create(student=student, mark=m2, programCode=key.sorceCode)
+                            p = PretendVal.objects.create(student=student, mark=m2, programCode=v[0].sorceCode)
                             p.unique = v[1]
                             p.save()
                             pVal.vals.add(p)
-                            print (m2.link)
+                            print (v[0].sorceCode.link)
+                        print "end"
                 #for d in data:
                  #   print(len(d[0]))
 
