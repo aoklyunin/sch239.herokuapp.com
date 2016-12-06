@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from localCode.moodle import MoodleHelper
 from sworks.forms import LoginForm, AttemptForm, AddTaskForm, AddAttemptForm, MarkForm
-from .models import Student, Task, Attempt, AttemptComment, Mark
+from .models import Student, Task, Attempt, AttemptComment, Mark, PretendToCheat, TaskType
 
 
 # просмотр оценки
@@ -277,3 +277,16 @@ def drop(request, attempt_id):
     attempt.state = 3
     attempt.save()
     return HttpResponseRedirect('../../../attemptList/')
+
+
+def cheaters(request):
+    template = 'sworks/cheaters.html'
+    tt = TaskType.objects.get(name="Программирование")
+    data = []
+    for task in Task.objects.filter(task_type=tt).filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=10)):
+        ps = PretendToCheat.objects.filter(task=task)
+        data.append([task.task_name,ps])
+    context = {
+        "data":data
+    }
+    return render(request, template, context)

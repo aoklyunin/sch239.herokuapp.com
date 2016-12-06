@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^getTasks/$', sworks.views.getTasks),
     # журнал
     url(r'^marks/$', sworks.views.marks),
+    url(r'^cheaters/$', sworks.views.cheaters),
     # просмотр конкретного задания
     url(r'^markView/(?P<mark_id>[0-9]+)/$', sworks.views.markView),
     # на главную страницу
