@@ -21,12 +21,12 @@ class Command(BaseCommand):
         moodle = MoodleHelper()
         # проходим по всем заданиям за последние 30 дней
         tt = TaskType.objects.get(name="Программирование")
-        for task in Task.objects.filter(task_type=tt).filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=10)):
+        for task in Task.objects.filter(task_type=tt).filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)):
             # for task in Task.objects.all():
                 print(task.task_name)
             #try:
                 # надо добавить фильтр по непроверенным оценкам
-                marks = Mark.objects.filter(task = task)
+                marks = Mark.objects.filter(task = task).filter(checked=False)
                 data = []
                 ln = 0
                 for m in marks:

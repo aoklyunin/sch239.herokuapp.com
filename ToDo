@@ -67,3 +67,5 @@ sc = new Scanner(System.in);- создание объекта класса
  if, if-else
  арифметические операции
 точка с запято тоже отдельная лексема asfas
+
+Убрать из кода puclic, static, class имя_класса, psvm, заменить System.out.print/ptintln/ptintf на print/ptintln/printf
