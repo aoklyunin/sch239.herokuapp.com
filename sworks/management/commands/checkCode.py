@@ -84,12 +84,7 @@ class Command(BaseCommand):
                             else:
                                 dict[a] = [[b, c, i]]
                                 lstAdd.append(b)
-                                # print(c,i)
-                                # m1 = Mark.objects.filter(sources=a.sorceCode).first()
-                                # m2 = Mark.objects.filter(sources=b.sorceCode).first()
-                                # print (m1.link)
-                                # print (m2.link)
-                                # print (a.canonizedText,b.canonizedText)
+
                 for key, value in dict.iteritems():
                     print "begin"
                     m1 = Mark.objects.filter(sources=key.sorceCode).first()
