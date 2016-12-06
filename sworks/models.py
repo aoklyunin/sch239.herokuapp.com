@@ -181,5 +181,5 @@ class PretendToCheat(models.Model):
     students = models.ManyToManyField(Student)
     marks = models.ManyToManyField(Mark)
     task = models.ForeignKey(Task,default=0)
-    state = models.ImageField(default=0)
+    state = models.IntegerField(default=0)
     n = models.IntegerField(default=0)

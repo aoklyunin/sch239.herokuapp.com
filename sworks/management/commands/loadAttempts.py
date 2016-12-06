@@ -37,7 +37,7 @@ class Command(BaseCommand):
         # проходим по всем заданиям за последние 30 дней
         for task in Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)):
             # for task in Task.objects.all():
-            #print(task.task_name)
+            print(task.task_name)
             try:
                 # тип задания: программирование или эссе
                 tt = TaskType.objects.get(name="Программирование")
