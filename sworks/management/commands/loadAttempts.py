@@ -83,11 +83,12 @@ class Command(BaseCommand):
                             if task.task_type ==tt and (flgAddCode or (m and not m.sources.all())):
                                 i = 0
                                 for code in moodle.loadCodeFromAttempt(at["href"]):
-                                    #print(code)
+                                    #print(len(code[0]))
                                     i=i+1
                                     pg = ProgramCode.objects.create(language = CodeLanguage.objects.get(name="Java"),
                                                                     n = i)
-                                    pg.text = code
+                                    pg.text = code[0]
+                                    pg.link = code[1]
                                     pg.save()
                                     m.sources.add(pg)
 

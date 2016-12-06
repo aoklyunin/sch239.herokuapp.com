@@ -77,11 +77,13 @@ class ProgramCode(models.Model):
     text = models.CharField(max_length=1000000)
     # номер (на всякий случай)
     n = models.IntegerField(default=0)
+    # ссылка на исходный код
+    link = models.CharField(max_length=1000,default="")
 
     def __str__(self):
-        return self.text[:100]
+        return self.n+" : "+self.text[:100]
     def __unicode__(self):
-        return self.text[:100]
+        return self.n+" : "+self.text[:100]
 
 # оценка
 class Mark(models.Model):
@@ -168,8 +170,16 @@ class Attempt(models.Model):
         return self.student.__unicode__() + '.' + self.task.task_name + '(' + str(self.add_date) + ')'
 
 
-class PretendToCheat(models.Model):
-    studens = models.ManyToManyField(Student)
-    task = models.ForeignKey(Task)
-    programCodes = models.ManyToManyField(ProgramCode)
+class PretendVal(models.Model):
+    student = models.ForeignKey(Student)
+    mark = models.ForeignKey(Mark,null=True)
+    programCode = models.ForeignKey(ProgramCode)
     unique = models.FloatField(default=0)
+
+
+class PretendToCheat(models.Model):
+    students = models.ManyToManyField(Student)
+    marks = models.ManyToManyField(Mark)
+    task = models.ForeignKey(Task,default=0)
+    state = models.ImageField(default=0)
+    n = models.IntegerField(default=0)

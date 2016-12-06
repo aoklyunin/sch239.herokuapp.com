@@ -4,7 +4,7 @@ import re
 from collections import defaultdict
 
 from localCode.constants import *
-
+from sworks.models import ProgramCode
 
 # по идее можно использоват Node
 # from lib2to3.pytree import Node
@@ -30,6 +30,7 @@ class SimpleCodeAnalysis:
     text = ""
     canonizedText = ""
     root = tree()
+    sorceCode = ProgramCode()
     # делаем исходный текст удобным для анализа
     def canonize(self,text):
         # убираем все лишние пробелы и переносы строк
@@ -46,7 +47,7 @@ class SimpleCodeAnalysis:
     # формируем шилнгл по тексту
     def genshingle(self,source):
         import binascii
-        shingleLen = 6  # длина шингла
+        shingleLen = 5  # длина шингла
         out = []
         for i in range(len(source) - (shingleLen - 1)):
             out.append(binascii.crc32(' '.join([x for x in source[i:i + shingleLen]]).encode('utf-8')))
@@ -58,14 +59,17 @@ class SimpleCodeAnalysis:
         for i in range(len(self.shingledData)):
             if self.shingledData[i] in source2.shingledData:
                 same = same + 1
-
+        if len(self.shingledData)==0 or len(source2.shingledData)==0:
+            return 0
         return same * 2 / float(len(self.shingledData) + len(source2.shingledData)) * 100
 
-    def __init__(self, text):
+    def __init__(self, code):
+        self.sorceCode = code
         # запускаем парсинг всего текста, с главным элементом в качестве корня
-        self.text = text
-        self.canonizedText = self.canonize(text)
+        self.text = self.sorceCode.text
+        self.canonizedText = self.canonize(self.text)
         self.shingledData = self.genshingle(self.canonizedText)
+
 
     def printStruct(self):
 
@@ -187,6 +191,6 @@ class CodeAnalysis:
         self.parceText(text, self.root)
 
 
-ca = SimpleCodeAnalysis(code_text2)
-cb = SimpleCodeAnalysis(code_text3)
-print(ca.compaireTo(cb))
+#ca = SimpleCodeAnalysis(code_text2)
+#cb = SimpleCodeAnalysis(code_text3)
+#print(ca.compaireTo(cb))

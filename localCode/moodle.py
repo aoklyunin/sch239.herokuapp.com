@@ -195,7 +195,7 @@ class MoodleHelper():
                 # кладём в код пустую строку
                 code = ""
             # добавляем в масив исходный код
-            arr.append(code)
+            arr.append([code,l])
         # возвращаем массив исходных кодов
         return arr
 
