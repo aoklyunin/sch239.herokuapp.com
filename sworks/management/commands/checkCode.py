@@ -55,6 +55,9 @@ class Command(BaseCommand):
                 (add_data, ln) = self.generateCodeDataFromMarks(marks)
                 if (len(add_data) == 0):
                     continue
+                for m in marks:
+                    m.checked = True
+                    m.save()
                 # надо добавить фильтр по непроверенным оценкам
                 marks = Mark.objects.filter(task = task)
                 (all_data,ln) = self.generateCodeDataFromMarks(marks)
