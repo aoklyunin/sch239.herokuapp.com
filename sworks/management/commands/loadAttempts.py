@@ -35,10 +35,10 @@ class Command(BaseCommand):
         # экземпляр класса для работы с mdl
         moodle = MoodleHelper()
         # проходим по всем заданиям за последние 30 дней
-        for task in Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=20)):
+        for task in Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)):
             # for task in Task.objects.all():
-                print(task.task_name)
-            #try:
+            #print(task.task_name)
+            try:
                 # тип задания: программирование или эссе
                 tt = TaskType.objects.get(name="Программирование")
                 # загружаем попытку
@@ -83,13 +83,13 @@ class Command(BaseCommand):
                             if task.task_type ==tt and (flgAddCode or (m and not m.sources.all())):
                                 i = 0
                                 for code in moodle.loadCodeFromAttempt(at["href"]):
+                                    print(code)
                                     i=i+1
                                     pg = ProgramCode.objects.create(language = CodeLanguage.objects.get(name="Java"),
-                                                                    text = code,
                                                                     n = i)
+                                    pg.text = code
                                     pg.save()
                                     m.sources.add(pg)
 
-
-            #except:
-            #    pass
+            except:
+                pass

@@ -174,6 +174,7 @@ class MoodleHelper():
         # добавляем ссылки в список
         for a in aLst:
             links.append(a.get("href"))
+        #print (a)
         # т.к. первая ссылка - на эту же страницу (#), то вместо неё
         # кладём ссылку на страницу
         links[0] = href
