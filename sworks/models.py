@@ -99,7 +99,7 @@ class Mark(models.Model):
     # исходники
     sources = models.ManyToManyField(ProgramCode)
     # проверена ли оценка
-    checked = models.BooleanField(default=False)
+    checked = models.IntegerField(default=0)
 
     def __str__(self):
         return self.task.task_name + '(' + str(self.add_date) + ') ' + str(self.m_value)

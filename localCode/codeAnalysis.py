@@ -43,7 +43,14 @@ class SimpleCodeAnalysis:
         for s in STOP_SYMBOLS:
             text = text.replace(s+" ",s)
             text = text.replace(" "+s,s)
+
+        for s in REPLACE_WORDS:
+            text = text.replace(s[0],s[1])
+
+        # убираем все лишние пробелы и переносы строк
+        text = re.sub("\s+", " ", text)
         return text
+
     # формируем шилнгл по тексту
     def genshingle(self,source):
         import binascii
@@ -69,7 +76,6 @@ class SimpleCodeAnalysis:
         self.text = self.sorceCode.text
         self.canonizedText = self.canonize(self.text)
         self.shingledData = self.genshingle(self.canonizedText)
-
 
     def printStruct(self):
 
@@ -191,6 +197,6 @@ class CodeAnalysis:
         self.parceText(text, self.root)
 
 
-#ca = SimpleCodeAnalysis(code_text2)
-#cb = SimpleCodeAnalysis(code_text3)
+#ca = SimpleCodeAnalysis(code_text2,0)
+#cb = SimpleCodeAnalysis(code_text3,0)
 #print(ca.compaireTo(cb))

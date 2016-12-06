@@ -45,6 +45,18 @@ R_DOUBLE_BRACKET = ["\(\)",lambda s:s,False,"round_bracket"]
 STOP_SYMBOLS = [
     ",", "=", "+", "-", "/", "^", "!", "[", "]", "{", "}","(",")","&","|","<",">",";"
 ]
+REPLACE_WORDS = [
+    ["public",""],
+    ["static",""],
+    ["void main(String [] args)",""],
+    ["System.out.",""],
+    ["class(.*?){",""],
+    ["Scanner(.*?)=new Scanner(System.in)",""],
+    ["(",""],
+    ["{",""],
+    [")",""],
+    ["}",""]
+]
 
 # программный код для тестового рабора исходника на лексемы
 code_text = """import java.util.Scanner
@@ -113,7 +125,7 @@ class     msc
     }
 }"""
 
-code_text2  = """
+code_text2 = """
 
 import java.util.Scanner;
 public class msc {
