@@ -81,9 +81,10 @@ class ProgramCode(models.Model):
     link = models.CharField(max_length=1000,default="")
 
     def __str__(self):
-        return str(self.n)+" : "+self.text[:100]
+        return str(self.n)+" : "+self.text.decode('utf-8')
+
     def __unicode__(self):
-        return str(self.n)+" : "+self.text[:100]
+        return str(self.n)+" : "+self.text.decode('utf-8')
 
 # оценка
 class Mark(models.Model):
@@ -97,6 +98,8 @@ class Mark(models.Model):
     link = models.CharField(max_length=200)
     # исходники
     sources = models.ManyToManyField(ProgramCode)
+    # проверена ли оценка
+    checked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.task.task_name + '(' + str(self.add_date) + ') ' + str(self.m_value)
@@ -121,7 +124,7 @@ class Student(models.Model):
             self.st_group) + ')'
 
     def __unicode__(self):
-        return self.user.first_name + ' ' + self.user.last_name
+        return self.user.first_name.decode('utf-8') + u' ' + self.user.last_name.decode('utf-8')
 
 
 # комментарий к попытке
@@ -171,15 +174,25 @@ class Attempt(models.Model):
 
 
 class PretendVal(models.Model):
-    student = models.ForeignKey(Student)
+    student = models.ForeignKey(Student,null=True)
     mark = models.ForeignKey(Mark,null=True)
-    programCode = models.ForeignKey(ProgramCode)
+    programCode = models.ForeignKey(ProgramCode,null=True)
     unique = models.FloatField(default=0)
 
+    def __str__(self):
+        return self.mark.__str__()
+
+    def __unicode__(self):
+        return self.mark.__unicode__()
 
 class PretendToCheat(models.Model):
-    students = models.ManyToManyField(Student)
-    marks = models.ManyToManyField(Mark)
-    task = models.ForeignKey(Task,default=0)
+    vals  = models.ManyToManyField(PretendVal)
+    task = models.ForeignKey(Task,null=True)
     state = models.IntegerField(default=0)
     n = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return self.task.__unicode__()
+
+    def __str__(self):
+        return self.task.__str__()
