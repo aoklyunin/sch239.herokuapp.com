@@ -124,7 +124,7 @@ class Student(models.Model):
             self.st_group) + ')'
 
     def __unicode__(self):
-        return self.user.first_name.decode('utf-8') + u' ' + self.user.last_name.decode('utf-8')
+        return self.user.first_name + ' ' + self.user.last_name
 
 
 # комментарий к попытке
