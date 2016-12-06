@@ -81,9 +81,9 @@ class ProgramCode(models.Model):
     link = models.CharField(max_length=1000,default="")
 
     def __str__(self):
-        return self.n+" : "+self.text[:100]
+        return str(self.n)+" : "+self.text[:100]
     def __unicode__(self):
-        return self.n+" : "+self.text[:100]
+        return str(self.n)+" : "+self.text[:100]
 
 # оценка
 class Mark(models.Model):
