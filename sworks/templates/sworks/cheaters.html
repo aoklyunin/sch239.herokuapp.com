@@ -25,9 +25,15 @@
     {% if user.is_authenticated == False %}
     {% else %}
         {% for dat in data %}
-            <h2>{{ dat.get(0) }}</h2>
-            {%for p in dat.get(1) %}
-
+            <h2>{{ dat.0 }}</h2>
+            {%for ps in dat.1 %}
+                {{ps.n}}
+                {% for p in ps.vals.all %}
+                    <b>{{p.unique }}</b> <br>
+                    <b>{{p.student }}</b> <br>
+                    <a href="{{p.programCode.link}}">Ссылка</a>
+                   <!-- <i>{{p.programCode.text}}</i> -->
+                {% endfor %}
             {% endfor %}
         {% endfor %}
     {% endif %}

@@ -80,6 +80,7 @@ class Command(BaseCommand):
                             m2 = Mark.objects.filter(sources=v[0].sorceCode).first()
                             student = Student.objects.filter(marks=m2).first()
                             p = PretendVal.objects.create(student=student, mark=m2, programCode=key.sorceCode)
+                            p.unique = v[1]
                             p.save()
                             pVal.vals.add(p)
                             print (m2.link)
