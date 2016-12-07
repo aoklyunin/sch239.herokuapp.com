@@ -34,10 +34,11 @@
                     <a href="{{p.programCode.link}}">Сылка</a><br>
                    <!-- <i>{{p.programCode.text}}</i> -->
                 {% endfor %}
+                <a href="../../../cheaters/punish/{{p.id}}/">Списывали</a>
+                <a href="../../../cheaters/drop/{{p.id}}/">Не списывали</a>
                 <br><br>
             {% endfor %}
-            <a href="../../../cheaters/punish/{{p.id}}/">Списывали</a>
-            <a href="../../../cheaters/drop/{{p.id}}/">Не списывали</a>
+
         {% endfor %}
     {% endif %}
 {% endblock %}
