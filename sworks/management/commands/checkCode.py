@@ -76,7 +76,7 @@ class Command(BaseCommand):
                         c = a.compaireTo(b)
                         # print(c)
 
-                        if c > 85:
+                        if c > 80:
                             if a in dict:
                                 dict[a].append([b, c, i])
                             elif b in dict:
