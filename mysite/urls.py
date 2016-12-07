@@ -40,5 +40,10 @@ urlpatterns = [
     url(r'^markView/(?P<mark_id>[0-9]+)/$', sworks.views.markView),
     # на главную страницу
     url(r'^', sworks.auth.index, name='index'),
+    url(r'^cheaters/punish/(?P<p_id>[0-9]+)$', sworks.views.punishCheater),
+    url(r'^cheaters/drop/(?P<p_id>[0-9]+)$', sworks.views.dropCheater),
+    url(r'^punished/$', sworks.views.punished),
+#cheaters/punish/{{p.id}}/">Списывали</a>
+ #           <a href="../../../cheaters/drop/{{p.id}}
 
 ]

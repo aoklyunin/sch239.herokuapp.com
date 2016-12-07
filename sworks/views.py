@@ -284,9 +284,46 @@ def cheaters(request):
     tt = TaskType.objects.get(name="Программирование")
     data = []
     for task in Task.objects.filter(task_type=tt).filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=10)):
-        ps = PretendToCheat.objects.filter(task=task)
-        data.append([task.task_name,ps])
+        ps = PretendToCheat.objects.filter(task=task).filter(state=0)
+        arr = []
+        for p in ps:
+            flg = False
+            for val in ps.vals.all():
+                if val.mark.m_value!=-1:
+                    flg = True
+            if flg:
+                arr.append(p)
+        data.append([task.task_name,arr])
     context = {
         "data":data
+    }
+    return render(request, template, context)
+
+
+def punishCheater(request, pid):
+    p = PretendToCheat.objects.get(id = pid)
+    for val in p.vals.all():
+        val.mark.m_value = -1
+        val.mark.save()
+    p.state = 1
+    p.save()
+    return HttpResponseRedirect("../../cheaters/")
+
+
+
+def dropCheater(request,pid):
+    return None
+
+
+def punished(request):
+    template = 'sworks/cheaters.html'
+    tt = TaskType.objects.get(name="Программирование")
+    data = []
+    for task in Task.objects.filter(task_type=tt).filter(
+            pub_date__gt=datetime.date.today() - datetime.timedelta(days=10)):
+        ps = PretendToCheat.objects.filter(task=task).filter(state=1)
+        data.append([task.task_name, ps])
+    context = {
+        "data": data
     }
     return render(request, template, context)
