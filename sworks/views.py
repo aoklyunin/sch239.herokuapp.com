@@ -300,22 +300,22 @@ def cheaters(request):
     return render(request, template, context)
 
 
-def punishCheater(request, pid):
-    p = PretendToCheat.objects.get(pk = pid)
+def punishCheater(request, p_id):
+    p = PretendToCheat.objects.get(pk = p_id)
     for val in p.vals.all():
         val.mark.m_value = -1
         val.mark.save()
     p.state = 1
     p.save()
-    return HttpResponseRedirect("../../cheaters/")
+    return HttpResponseRedirect("../../../../cheaters/")
 
 
 
-def dropCheater(request,pid):
-    p = PretendToCheat.objects.get(pk=pid)
+def dropCheater(request,p_id):
+    p = PretendToCheat.objects.get(pk=p_id)
     p.state = 2
     p.save()
-    return HttpResponseRedirect("../../cheaters/")
+    return HttpResponseRedirect("../../../../cheaters/")
 
 def punished(request):
     template = 'sworks/cheaters.html'
