@@ -61,7 +61,7 @@ class Command(BaseCommand):
                             # если оценка уже есть
                             if m:
                                 # если новая оценка больше текущей
-                                if val > m.m_value:
+                                if m.m_value!=-1 and val > m.m_value:
                                     # меняем оценку
                                     m.m_value = getValBySum(task, at["sum"])
                                     # меняем ссылку
