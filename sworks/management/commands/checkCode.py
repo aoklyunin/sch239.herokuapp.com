@@ -89,6 +89,7 @@ class Command(BaseCommand):
                         student = Student.objects.filter(marks=m).first()
                         p = PretendVal.objects.create(programCode=r.sorceCode, mark=m, student=student)
                         p.unique = rec[2]
+
                         p.save()
                         pVal.vals.add(p)
                     print "end"
