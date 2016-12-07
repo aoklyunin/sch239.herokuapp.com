@@ -288,7 +288,7 @@ def cheaters(request):
         arr = []
         for p in ps:
             flg = False
-            for val in ps.vals.all():
+            for val in p.vals.all():
                 if val.mark.m_value!=-1:
                     flg = True
             if flg:
