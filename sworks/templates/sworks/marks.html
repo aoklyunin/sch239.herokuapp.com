@@ -89,9 +89,11 @@
                                 {% ifequal a.text "-1" %}
                                     <td class="long cheated" align="center">
                                         <a href="{{ a.href }}">1</a>
-                                    {% endif %}
+
                                     </td>
-                                {%else %}
+                                {% endifequal %}
+
+                                {% ifnotequal a.text "-1" %}
                                     <td class="long" align="center">
                                     {% if a.href == "" %}
                                         {{ a.text }}
@@ -99,7 +101,7 @@
                                         <a href="{{ a.href }}">{{ a.text }}</a>
                                     {% endif %}
                                     </td>
-                                {%endif%}
+                                {%endifnotequal%}
                             {% endif %}
                         {% endfor %}
                     </tr>
