@@ -100,5 +100,5 @@ class RegisterForm(forms.Form):
 class MarkForm(forms.Form):
     # оценка
     mark = forms.CharField(max_length=1,
-                           widget=forms.Textarea(attrs={'rows': 1, 'cols': 1}),
+                           widget=forms.Textarea(attrs={'rows': 1, 'cols': 2}),
                            label="")
