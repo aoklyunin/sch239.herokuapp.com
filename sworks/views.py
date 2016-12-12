@@ -283,8 +283,8 @@ def cheaters(request):
     template = 'sworks/cheaters.html'
     tt = TaskType.objects.get(name="Программирование")
     data = []
-    for task in Task.objects.filter(task_type=tt).filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=10)):
-        ps = PretendToCheat.objects.filter(task=task).filter(state=0)[:20]
+    for task in Task.objects.filter(task_type=tt).filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=15)):
+        ps = PretendToCheat.objects.filter(task=task).filter(state=0)
         arr = []
         for p in ps:
             flg = False
@@ -322,7 +322,7 @@ def punished(request):
     tt = TaskType.objects.get(name="Программирование")
     data = []
     for task in Task.objects.filter(task_type=tt).filter(
-            pub_date__gt=datetime.date.today() - datetime.timedelta(days=10)):
+            pub_date__gt=datetime.date.today() - datetime.timedelta(days=15)):
         ps = PretendToCheat.objects.filter(task=task).filter(state=1)
         data.append([task.task_name, ps])
     context = {

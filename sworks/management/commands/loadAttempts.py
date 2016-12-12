@@ -66,10 +66,10 @@ class Command(BaseCommand):
                                     m.m_value = getValBySum(task, at["sum"])
                                     # меняем ссылку
                                     m.link = at["href"]
+                                    m.sources.all().clear()
                                     m.sources.clear()
                                     # сохраняем изменения
                                     m.save()
-
                                     flgAddCode = True
                             else:
                                 # создаём новую оценку
