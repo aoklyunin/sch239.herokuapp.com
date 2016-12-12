@@ -313,8 +313,8 @@ def punishCheater(request, p_id):
 
 def dropCheater(request,p_id):
     p = PretendToCheat.objects.get(pk=p_id)
-    p.state = 2
-    p.save()
+    p.vals.all().clear()
+    p.delete()
     return HttpResponseRedirect("../../../../cheaters/")
 
 def punished(request):
