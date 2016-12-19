@@ -20,7 +20,7 @@ class Command(BaseCommand):
             # for task in Task.objects.all():
             print(task.task_name)
             for m in Mark.objects.filter(task=task):
-                print m
+                #print(m)
                 m.sources.all().clear()
             Mark.objects.filter(task=task).delete()
             for p in PretendToCheat.objects.filter(task=task):
