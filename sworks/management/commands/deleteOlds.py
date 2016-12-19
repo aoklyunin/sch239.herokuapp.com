@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # проходим по всем заданиям за последние 30 дней
-        for task in Task.objects.filter(pub_date__lt=datetime.date.today() - datetime.timedelta(days=30)):
+        for task in Task.objects.filter(pub_date__lt=datetime.date.today() - datetime.timedelta(days=15)):
             # for task in Task.objects.all():
             print(task.task_name)
             for m in Mark.objects.filter(task=task):

@@ -55,7 +55,7 @@ def marks(request):
     # данные для журнала
     data = []
     # получаем все задания за последние 30 дней
-    tasks = Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)).order_by('pub_date')
+    tasks = Task.objects.filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=15)).order_by('pub_date')
     # имена заданий
     tasknames = []
     # типы заданий
