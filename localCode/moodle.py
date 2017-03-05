@@ -84,7 +84,7 @@ class MoodleHelper():
                         finally:
                             s = s.replace(',', '.')
                             # print(s)
-                            sum += 0 if (s == "-" or float(s) < 0.1) else 1
+                            sum += 0 if (s == "-" or float(s) < 0.1) else float(s)
                     dict["sum"] = sum
                     try:
                         dict["ev"] = float(tds[7].getchildren()[0].text.replace(',', '.'))
