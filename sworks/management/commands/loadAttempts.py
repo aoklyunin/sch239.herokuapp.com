@@ -54,7 +54,7 @@ class Command(BaseCommand):
                         # если студент найден
                         if student:
                             # получаем оценку по сумме
-                            val = getValBySum(task, at["sum"])
+                            val = round(at["sum"])
                             flgAddCode = False
                             # ищем оценку этого студента за выбранное задание
                             m = student.marks.filter(task=task).first()
@@ -63,7 +63,7 @@ class Command(BaseCommand):
                                 # если новая оценка больше текущей
                                 if m.m_value!=-1 and val > m.m_value:
                                     # меняем оценку
-                                    m.m_value = getValBySum(task, at["sum"])
+                                    m.m_value = round(at["sum"])
                                     # меняем ссылку
                                     m.link = at["href"]
                                     m.sources.all().clear()
