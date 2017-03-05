@@ -47,7 +47,7 @@ class Command(BaseCommand):
 
         tt = TaskType.objects.get(name="Программирование")
         for task in Task.objects.filter(task_type=tt).filter(
-                pub_date__gt=datetime.date.today() - datetime.timedelta(days=30)):
+                pub_date__gt=datetime.date.today() - datetime.timedelta(days=60)):
             # for task in Task.objects.all():
             print(task.task_name)
             # try:
