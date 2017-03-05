@@ -63,40 +63,41 @@ class Command(BaseCommand):
             (all_data, ln) = self.generateCodeDataFromMarks(marks)
 
             for i in range(ln):
-                arr = []
-                for j in range(len(all_data)):
-                    arr.append(all_data[j][i])
-                arr_add = []
-                for j in range(len(add_data)):
-                    arr_add.append(add_data[j][i])
+                try:
+                    arr = []
+                    for j in range(len(all_data)):
+                        arr.append(all_data[j][i])
+                    arr_add = []
+                    for j in range(len(add_data)):
+                        arr_add.append(add_data[j][i])
 
-                lstAdd = []
-                for a, b in [(x, y) for x in arr for y in arr_add if x != y]:
-                    if a.sorceCode != b.sorceCode:
-                        c = a.compaireTo(b)
-                        #print(c)
-                        if c > 85:
-                            lstAdd.append([a,b,c])
+                    lstAdd = []
+                    for a, b in [(x, y) for x in arr for y in arr_add if x != y]:
+                        if a.sorceCode != b.sorceCode:
+                            c = a.compaireTo(b)
+                            #print(c)
+                            if c > 85:
+                                lstAdd.append([a,b,c])
 
-                for rec in lstAdd:
-                    print "begin"
-                    print rec[2]
-                    pVal = PretendToCheat.objects.create(task=task, state=0, n=i)
-                    pVal.save()
-                    for r in rec[:-1]:
-                        m = Mark.objects.filter(sources=r.sorceCode).first()
-                        print (r.sorceCode.link)
-                        student = Student.objects.filter(marks=m).first()
-                        p = PretendVal.objects.create(programCode=r.sorceCode, mark=m, student=student)
-                        p.unique = rec[2]
+                    for rec in lstAdd:
+                        print "begin"
+                        print rec[2]
+                        pVal = PretendToCheat.objects.create(task=task, state=0, n=i)
+                        pVal.save()
+                        for r in rec[:-1]:
+                            m = Mark.objects.filter(sources=r.sorceCode).first()
+                            print (r.sorceCode.link)
+                            student = Student.objects.filter(marks=m).first()
+                            p = PretendVal.objects.create(programCode=r.sorceCode, mark=m, student=student)
+                            p.unique = rec[2]
 
-                        p.save()
-                        pVal.vals.add(p)
-                    print "end"
+                            p.save()
+                            pVal.vals.add(p)
+                        print "end"
                     # for d in data:
                     #   print(len(d[0]))
 
 
 
-                    # except:
-                    #    pass
+                except:
+                       pass
