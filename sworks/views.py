@@ -186,11 +186,11 @@ def addTask(request):
         'task_type': 'В классе',
         'work_type': "Программирование",
         'pub_date': datetime.date.today(),
-        'est1': '0,1,2',
-        'est2': '3,4,5',
-        'est3': '6,7,8',
-        'est4': '10,9',
-        'est5': '11',
+        'est1': '1',
+        'est2': '2',
+        'est3': '3',
+        'est4': '4',
+        'est5': '5',
         'ins_form': LoginForm()
     }
 
