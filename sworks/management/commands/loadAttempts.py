@@ -67,7 +67,9 @@ class Command(BaseCommand):
                                     m.m_value = round(at["sum"])
                                     # меняем ссылку
                                     m.link = at["href"]
-                                    m.sources.all().clear()
+                                    for s in m.sources.all():
+                                        s.delete()
+
                                     m.sources.clear()
                                     # сохраняем изменения
                                     m.save()
