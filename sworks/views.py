@@ -285,7 +285,7 @@ def cheaters(request):
     data = []
     for task in Task.objects.filter(task_type=tt).filter(
             pub_date__gt=datetime.date.today() - datetime.timedelta(days=60)).filter(
-        pub_date__lt=datetime.date.today() - datetime.timedelta(days=30)):
+        pub_date__lt=datetime.date.today() - datetime.timedelta(days=50)):
         ps = PretendToCheat.objects.filter(task=task).filter(state=0)
         arr = []
         for p in ps:
