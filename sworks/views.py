@@ -283,7 +283,7 @@ def cheaters(request):
     template = 'sworks/cheaters.html'
     tt = TaskType.objects.get(name="Программирование")
     data = []
-    for task in Task.objects.filter(task_type=tt).filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=15)):
+    for task in Task.objects.filter(task_type=tt).filter(pub_date__gt=datetime.date.today() - datetime.timedelta(days=60)):
         ps = PretendToCheat.objects.filter(task=task).filter(state=0)
         arr = []
         for p in ps:
